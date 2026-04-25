@@ -1,0 +1,13 @@
+{% extends "dashboard.html" %}
+{% block content %}
+
+<form method="POST">
+  {% csrf_token %}
+  {{ form }}
+  <button class="btn btn-primary mt-3 w-100" type="submit">
+    <i class="material-icons align-middle" style="font-size:18px;">person_add</i> Manager qo'shish
+  </button>
+</form>
+<a href="{% url 'dashboard:users_list' %}" class="btn btn-outline-secondary mt-2 w-100">Bekor qilish</a>
+
+{% endblock %}
