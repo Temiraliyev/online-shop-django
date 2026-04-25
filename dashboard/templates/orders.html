@@ -1,34 +1,44 @@
 {% extends "dashboard.html" %}
 {% block content %}
-<table class="table">
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">User</th>
-        <th scope="col">Id</th>
-        <th scope="col">total price</th>
-        <th scope="col">status</th>
-        <th scope="col"></th>
-      </tr>
-    </thead>
+
+{% if orders %}
+<table class="table table-hover align-middle">
+  <thead class="table-light">
+    <tr>
+      <th>#</th>
+      <th>Foydalanuvchi</th>
+      <th>ID</th>
+      <th>Jami summa</th>
+      <th>Holati</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
     {% for order in orders %}
-    <tbody>
-      <tr>
-        <th scope="row">{{ forloop.counter }}</th>
-        <td>{{ order.user.full_name }}</td>
-        <td>{{ order.id }}</td>
-        <td>${{ order.get_total_price }}</td>
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ order.user.full_name }}</td>
+      <td>{{ order.id }}</td>
+      <td>{{ order.get_total_price }} so'm</td>
+      <td>
         {% if order.status %}
-            <td class="text-success">Successful</td>
+          <span class="badge bg-success">Muvaffaqiyatli</span>
         {% else %}
-            <td class="text-danger">Canceled</td>
+          <span class="badge bg-danger">Bekor qilingan</span>
         {% endif %}
-        <td><a href="{% url 'dashboard:order_detail' order.id %}" class="text-primary text-decoration-none">Detail</a></td>
-      </tr>
-    </tbody>
+      </td>
+      <td><a href="{% url 'dashboard:order_detail' order.id %}" class="btn btn-outline-primary btn-sm">Ko'rish</a></td>
+    </tr>
     {% endfor %}
-  </table>
-  
+  </tbody>
+</table>
+{% else %}
+<div class="text-center py-5">
+  <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#adb5bd" viewBox="0 0 16 16">
+    <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12z"/>
+  </svg>
+  <h5 class="text-muted mt-3">Buyurtmalar yo'q</h5>
+</div>
+{% endif %}
 
 {% endblock %}
-

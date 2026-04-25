@@ -1,25 +1,21 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <div class="col-md-6">
-        <form method="POST">
-            {% csrf_token %}
-            <h3>Login</h3>
-            <hr>
-            {{ form|crispy }}
-            <div class="form-group">
-                <button class="btn btn-primary mt-3 w-100" type="submit">Submit</button>
-            </div>
-            <div class="mt-2 mb-2">
-                <small class="">
-                    <a class="text-decoration-none text-danger" href="{% url 'accounts:password_reset' %}">Forgot Password?</a>
-                </small>
-            </div>
-        </form>
-        <div class="border-top pt-3">
-            <small class="text-muted">
-                New Here? <a class="text-decoration-none" href="{% url 'accounts:user_register' %}">Create account</a>
-            </small>
-        </div>
+<div class="col-md-5 col-lg-4 mx-auto mt-4">
+  <div class="card border-0 shadow-sm p-4">
+    <h4 class="fw-bold mb-1"><i class="material-icons align-middle">login</i> Kirish</h4>
+    <hr>
+    <form method="POST">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <button class="btn btn-primary w-100 mt-2" type="submit">Kirish</button>
+    </form>
+    <div class="mt-2">
+      <small><a class="text-danger text-decoration-none" href="{% url 'accounts:password_reset' %}">Parolni unutdingizmi?</a></small>
     </div>
+    <div class="border-top pt-3 mt-3">
+      <small class="text-muted">Yangi foydalanuvchimisiz? <a class="text-decoration-none" href="{% url 'accounts:user_register' %}">Ro'yxatdan o'tish</a></small>
+    </div>
+  </div>
+</div>
 {% endblock %}

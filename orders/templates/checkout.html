@@ -1,14 +1,21 @@
 {% extends "base.html" %}
-
 {% block content %}
-<div class="col-md-2"></div>
 
-<div class="col-md-8 border rounded p-3">
-    <h3 class="text-muted">Your Order Amount is: ${{order.get_total_price}}</h3>
-    <hr>
-    <p><b>Do you want to continue and pay?</b></p>
-    <a href="{% url 'cart:show_cart' %}" class="btn btn-danger">Back To Cart</a>
-    <a href="{% url 'orders:create_order' %}" class="btn btn-outline-success">Continue and pay</a>
+<div class="col-md-2"></div>
+<div class="col-md-7 border rounded p-4 bg-white shadow-sm">
+  <h4 class="fw-bold mb-1"><i class="material-icons align-middle text-success">payment</i> To'lov</h4>
+  <hr>
+  <h5 class="text-muted mb-3">Buyurtma summasi: <span class="text-primary fw-bold">{{ order.get_total_price }} so'm</span></h5>
+  <p class="mb-4">Davom etib to'lovni amalga oshirasizmi?</p>
+  <div class="d-flex gap-3">
+    <a href="{% url 'cart:show_cart' %}" class="btn btn-outline-danger px-4">
+      <i class="material-icons align-middle" style="font-size:18px;">arrow_back</i> Savatchaga qaytish
+    </a>
+    <a href="{% url 'orders:pay_order' order.id %}" class="btn btn-success px-4">
+      <i class="material-icons align-middle" style="font-size:18px;">check_circle</i> To'lash
+    </a>
+  </div>
+</div>
 <div class="col-md-2"></div>
 
 {% endblock %}

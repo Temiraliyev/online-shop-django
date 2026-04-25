@@ -1,32 +1,41 @@
 {% extends "dashboard.html" %}
-
 {% block content %}
 
-<table class="table table-striped ">
-    <thead class="text-muted">
-        <tr>
-            <th scope="col">n</th>
-            <th scope="col">title</th>
-            <th scope="col">price</th>
-            <th scope="col">category</th>
-            <th scope="col">date</th>
-            <th scope="col"></th>
-            <th scope="col"></th>
-        </tr>
-    </thead>
+{% if products %}
+<table class="table table-hover align-middle">
+  <thead class="table-light">
+    <tr>
+      <th>#</th>
+      <th>Nomi</th>
+      <th>Narxi</th>
+      <th>Kategoriya</th>
+      <th>Sana</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
     {% for product in products %}
-    <tbody>
-      <tr>
-        <th scope="row">{{ forloop.counter }}</th>
-        <td><a class="text-decoration-none" href="{{ product.get_absolute_url }}">{{ product.title }}</a></td>
-        <td>${{ product.price }}</td>
-        <td>{{ product.category }}</td>
-        <td>{{ product.date_created|date:"M d" }}</td>
-        <td><a class="text-danger text-decoration-none" href="{% url 'dashboard:delete_product' product.id %}">Delete</a></td>
-        <td><a class="text-info text-decoration-none" href="{% url 'dashboard:edit_product' product.id %}">Edit</a></td>
-      </tr>
-    </tbody>
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td><a class="text-decoration-none fw-semibold" href="{{ product.get_absolute_url }}">{{ product.title }}</a></td>
+      <td>{{ product.price }} so'm</td>
+      <td>{{ product.category }}</td>
+      <td>{{ product.date_created|date:"d M" }}</td>
+      <td><a class="btn btn-outline-danger btn-sm" href="{% url 'dashboard:delete_product' product.id %}">O'chirish</a></td>
+      <td><a class="btn btn-outline-primary btn-sm" href="{% url 'dashboard:edit_product' product.id %}">Tahrirlash</a></td>
+    </tr>
     {% endfor %}
+  </tbody>
 </table>
+{% else %}
+<div class="text-center py-5">
+  <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#adb5bd" viewBox="0 0 16 16">
+    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5z"/>
+  </svg>
+  <h5 class="text-muted mt-3">Mahsulotlar yo'q</h5>
+  <a href="{% url 'dashboard:add_product' %}" class="btn btn-primary mt-2">+ Yangi mahsulot qo'shish</a>
+</div>
+{% endif %}
 
 {% endblock %}

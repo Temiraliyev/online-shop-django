@@ -2,12 +2,11 @@
 {% block content %}
 
 <form method="POST">
-    {% csrf_token %}
-    {{ form }}
-    <div class="form-group">
-        <button class="btn btn-primary mt-3 w-100" type="submit">Submit</button>
-    </div>
+  {% csrf_token %}
+  {{ form }}
+  <button class="btn btn-primary mt-3 w-100" type="submit">
+    <i class="material-icons align-middle" style="font-size:18px;">save</i> Saqlash
+  </button>
 </form>
 
 {% endblock %}
-

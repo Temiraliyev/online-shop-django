@@ -1,20 +1,18 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <div class="col-md-6">
-        <form method="POST">
-            {% csrf_token %}
-            <h3>Create Account</h3>
-            <hr>
-            {{ form|crispy }}
-            <div class="form-group">
-                <button class="btn btn-primary w-100 mt-2" type="submit">Submit</button>
-            </div>
-        </form>
-        <div class="mt-3">
-            <small class="text-muted">
-                Already have an account? <a href="{% url 'accounts:user_login' %}">Login</a>
-            </small>
-        </div>
+<div class="col-md-5 col-lg-4 mx-auto mt-4">
+  <div class="card border-0 shadow-sm p-4">
+    <h4 class="fw-bold mb-1"><i class="material-icons align-middle">person_add</i> Ro'yxatdan o'tish</h4>
+    <hr>
+    <form method="POST">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <button class="btn btn-primary w-100 mt-2" type="submit">Ro'yxatdan o'tish</button>
+    </form>
+    <div class="border-top pt-3 mt-3">
+      <small class="text-muted">Hisobingiz bormi? <a class="text-decoration-none" href="{% url 'accounts:user_login' %}">Kirish</a></small>
     </div>
+  </div>
+</div>
 {% endblock %}
