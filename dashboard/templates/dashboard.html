@@ -38,6 +38,9 @@
           <p class="text-muted small mb-2">Tizimga kirgan: <strong>{{ request.user.email }}</strong></p>
           <hr>
           <h6 class="text-muted fw-bold px-2">MENYU</h6>
+          <a class="sidebar-link" href="{% url 'dashboard:dashboard_home' %}">
+            <i class="material-icons" style="font-size:20px;">dashboard</i> Asosiy
+          </a>
           <a class="sidebar-link" href="{% url 'dashboard:products' %}">
             <i class="material-icons" style="font-size:20px;">inventory_2</i> Mahsulotlar
           </a>

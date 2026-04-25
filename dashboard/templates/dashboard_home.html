@@ -1,0 +1,101 @@
+{% extends "dashboard.html" %}
+{% block content %}
+
+<!-- Statistika kartochkalari -->
+<div class="row g-3 mb-4">
+  <div class="col-6">
+    <a href="{% url 'dashboard:products' %}" class="text-decoration-none">
+      <div class="p-3 rounded border bg-primary bg-opacity-10 d-flex align-items-center gap-3">
+        <i class="material-icons text-primary" style="font-size:36px;">inventory_2</i>
+        <div>
+          <div class="fw-bold fs-4 text-primary">{{ products_count }}</div>
+          <div class="text-muted small">Mahsulotlar</div>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-6">
+    <a href="{% url 'dashboard:orders' %}" class="text-decoration-none">
+      <div class="p-3 rounded border bg-success bg-opacity-10 d-flex align-items-center gap-3">
+        <i class="material-icons text-success" style="font-size:36px;">receipt_long</i>
+        <div>
+          <div class="fw-bold fs-4 text-success">{{ orders_count }}</div>
+          <div class="text-muted small">Buyurtmalar</div>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-6">
+    <a href="{% url 'dashboard:users_list' %}" class="text-decoration-none">
+      <div class="p-3 rounded border bg-warning bg-opacity-10 d-flex align-items-center gap-3">
+        <i class="material-icons text-warning" style="font-size:36px;">group</i>
+        <div>
+          <div class="fw-bold fs-4 text-warning">{{ users_count }}</div>
+          <div class="text-muted small">Foydalanuvchilar</div>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="col-6">
+    <a href="{% url 'dashboard:users_list' %}" class="text-decoration-none">
+      <div class="p-3 rounded border bg-info bg-opacity-10 d-flex align-items-center gap-3">
+        <i class="material-icons text-info" style="font-size:36px;">admin_panel_settings</i>
+        <div>
+          <div class="fw-bold fs-4 text-info">{{ managers_count }}</div>
+          <div class="text-muted small">Managerlar</div>
+        </div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<!-- Tezkor harakatlar -->
+<h6 class="text-muted fw-bold mb-2">TEZKOR HARAKATLAR</h6>
+<div class="d-flex flex-wrap gap-2 mb-4">
+  <a href="{% url 'dashboard:add_product' %}" class="btn btn-outline-primary btn-sm">
+    <i class="material-icons align-middle" style="font-size:16px;">add_box</i> Mahsulot qo'shish
+  </a>
+  <a href="{% url 'dashboard:add_category' %}" class="btn btn-outline-secondary btn-sm">
+    <i class="material-icons align-middle" style="font-size:16px;">create_new_folder</i> Kategoriya qo'shish
+  </a>
+  <a href="{% url 'dashboard:add_manager' %}" class="btn btn-outline-info btn-sm">
+    <i class="material-icons align-middle" style="font-size:16px;">person_add</i> Manager qo'shish
+  </a>
+</div>
+
+<!-- So'nggi buyurtmalar -->
+<h6 class="text-muted fw-bold mb-2">SO'NGGI BUYURTMALAR</h6>
+{% if recent_orders %}
+<table class="table table-hover align-middle table-sm">
+  <thead class="table-light">
+    <tr>
+      <th>#</th>
+      <th>Foydalanuvchi</th>
+      <th>Summa</th>
+      <th>Holat</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in recent_orders %}
+    <tr>
+      <td class="text-muted small">{{ order.id }}</td>
+      <td>{{ order.user.full_name }}</td>
+      <td>{{ order.get_total_price }} so'm</td>
+      <td>
+        {% if order.status %}
+          <span class="badge bg-success">Muvaffaqiyatli</span>
+        {% else %}
+          <span class="badge bg-danger">Bekor qilingan</span>
+        {% endif %}
+      </td>
+      <td><a href="{% url 'dashboard:order_detail' order.id %}" class="btn btn-outline-primary btn-sm">Ko'rish</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="text-muted">Hali buyurtmalar yo'q.</p>
+{% endif %}
+
+{% endblock %}

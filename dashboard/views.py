@@ -21,6 +21,20 @@ def is_manager(user):
 
 @user_passes_test(is_manager)
 @login_required
+def dashboard_home(request):
+    context = {
+        'title': 'Boshqaruv paneli',
+        'products_count': Product.objects.count(),
+        'orders_count': Order.objects.count(),
+        'users_count': User.objects.count(),
+        'managers_count': User.objects.filter(is_manager=True).count(),
+        'recent_orders': Order.objects.order_by('-id')[:5],
+    }
+    return render(request, 'dashboard_home.html', context)
+
+
+@user_passes_test(is_manager)
+@login_required
 def products(request):
     products = Product.objects.all()
     context = {'title':'Products' ,'products':products}

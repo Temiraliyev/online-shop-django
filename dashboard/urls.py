@@ -5,6 +5,7 @@ from dashboard import views
 app_name = 'dashboard'
 
 urlpatterns = [
+    path('', views.dashboard_home, name='dashboard_home'),
     path('products', views.products, name='products'),
     path('products/delete/<int:id>', views.delete_product, name='delete_product'),
     path('products/edit/<int:id>', views.edit_product, name='edit_product'),
