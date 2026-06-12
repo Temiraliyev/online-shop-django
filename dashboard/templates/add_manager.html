@@ -1,13 +1,26 @@
 {% extends "dashboard.html" %}
 {% block content %}
 
-<form method="POST">
-  {% csrf_token %}
-  {{ form }}
-  <button class="btn btn-primary mt-3 w-100" type="submit">
-    <i class="material-icons align-middle" style="font-size:18px;">person_add</i> Manager qo'shish
-  </button>
-</form>
-<a href="{% url 'dashboard:users_list' %}" class="btn btn-outline-secondary mt-2 w-100">Bekor qilish</a>
+<div style="max-width:480px;">
+  <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;overflow:hidden;">
+    <div style="padding:20px 28px;border-bottom:1px solid #e2e8f0;background:#f8fafc;">
+      <h3 style="font-size:.85rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin:0;">Yangi manager qo'shish</h3>
+    </div>
+    <div style="padding:28px;">
+      <form method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <div style="display:flex;gap:10px;margin-top:20px;">
+          <button class="btn-dash-primary" type="submit" style="padding:11px 24px;font-size:.9rem;">
+            <span class="material-icons-round" style="font-size:18px;">person_add</span> Manager qo'shish
+          </button>
+          <a href="{% url 'dashboard:users_list' %}" class="btn-dash-outline" style="padding:11px 20px;font-size:.9rem;">
+            Bekor qilish
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

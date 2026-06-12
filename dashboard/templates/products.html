@@ -2,39 +2,56 @@
 {% block content %}
 
 {% if products %}
-<table class="table table-hover align-middle">
-  <thead class="table-light">
-    <tr>
-      <th>#</th>
-      <th>Nomi</th>
-      <th>Narxi</th>
-      <th>Kategoriya</th>
-      <th>Sana</th>
-      <th></th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for product in products %}
-    <tr>
-      <td>{{ forloop.counter }}</td>
-      <td><a class="text-decoration-none fw-semibold" href="{{ product.get_absolute_url }}">{{ product.title }}</a></td>
-      <td>{{ product.price }} so'm</td>
-      <td>{{ product.category }}</td>
-      <td>{{ product.date_created|date:"d M" }}</td>
-      <td><a class="btn btn-outline-danger btn-sm" href="{% url 'dashboard:delete_product' product.id %}">O'chirish</a></td>
-      <td><a class="btn btn-outline-primary btn-sm" href="{% url 'dashboard:edit_product' product.id %}">Tahrirlash</a></td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;overflow:hidden;">
+  <table class="table dash-table mb-0">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nomi</th>
+        <th>Narxi</th>
+        <th>Kategoriya</th>
+        <th>Sana</th>
+        <th colspan="2" style="text-align:right;">Amallar</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+      <tr>
+        <td style="color:#94a3b8;font-weight:500;">{{ forloop.counter }}</td>
+        <td>
+          <a href="{{ product.get_absolute_url }}" style="font-weight:600;color:#0f172a;text-decoration:none;" target="_blank">
+            {{ product.title }}
+          </a>
+        </td>
+        <td style="color:#6366f1;font-weight:700;">{{ product.price|floatformat:0 }} so'm</td>
+        <td>
+          <span style="background:#e0e7ff;color:#4f46e5;font-size:.75rem;font-weight:600;padding:3px 10px;border-radius:50px;">{{ product.category }}</span>
+        </td>
+        <td style="color:#94a3b8;font-size:.82rem;">{{ product.date_created|date:"d M, Y" }}</td>
+        <td style="text-align:right;">
+          <a href="{% url 'dashboard:edit_product' product.id %}" class="btn-dash-outline" style="padding:5px 12px;">
+            <span class="material-icons-round" style="font-size:14px;">edit</span> Tahrirlash
+          </a>
+        </td>
+        <td>
+          <a href="{% url 'dashboard:delete_product' product.id %}" class="btn-dash-danger" style="padding:5px 12px;">
+            <span class="material-icons-round" style="font-size:14px;">delete</span> O'chirish
+          </a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
 {% else %}
-<div class="text-center py-5">
-  <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#adb5bd" viewBox="0 0 16 16">
-    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5z"/>
-  </svg>
-  <h5 class="text-muted mt-3">Mahsulotlar yo'q</h5>
-  <a href="{% url 'dashboard:add_product' %}" class="btn btn-primary mt-2">+ Yangi mahsulot qo'shish</a>
+<div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;padding:80px;text-align:center;">
+  <span class="material-icons-round" style="font-size:64px;color:#e2e8f0;">inventory_2</span>
+  <h3 style="color:#94a3b8;font-size:1.1rem;font-weight:600;margin:16px 0 8px;">Mahsulotlar yo'q</h3>
+  <p style="color:#cbd5e1;font-size:.875rem;margin:0 0 24px;">Do'konni to'ldirish uchun mahsulot qo'shing.</p>
+  <a href="{% url 'dashboard:add_product' %}" class="btn-dash-primary">
+    <span class="material-icons-round" style="font-size:16px;">add</span> Mahsulot qo'shish
+  </a>
 </div>
 {% endif %}
 

@@ -1,33 +1,51 @@
 {% extends 'base.html' %}
 {% block content %}
+
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+  <h1 class="section-heading" style="margin:0;">
+    <span class="material-icons-round" style="color:#ef4444;">favorite</span>
+    Sevimli mahsulotlar
+  </h1>
+  {% if products %}
+  <span style="background:#fee2e2;color:#ef4444;font-size:.8rem;font-weight:700;padding:4px 14px;border-radius:50px;">{{ products|length }} ta</span>
+  {% endif %}
+</div>
+
 {% if products %}
-  <h4 class="fw-bold mb-3"><i class="material-icons align-middle text-danger">favorite</i> Sevimli mahsulotlar</h4>
-  <hr>
-  <div class="d-flex flex-wrap gap-3">
-    {% for product in products %}
-    <div class="card product-card" style="width: 16rem;">
-      <img style="object-fit: cover;" class="card-img mt-2 px-2" width="268" height="200" src="{{ product.image.url }}">
-      <div class="card-body text-center">
-        <h6 class="card-title fw-semibold">{{ product.title }}</h6>
-        <p class="text-muted mb-2">{{ product.price }} so'm</p>
-        <a href="{{ product.get_absolute_url }}" class="btn btn-primary btn-sm w-100 mb-2">Sotib olish</a>
-        <a href="{% url 'shop:remove_from_favorites' product.id %}" class="btn btn-outline-danger btn-sm w-100">
-          <i class="material-icons align-middle" style="font-size:16px;">delete</i> Olib tashlash
-        </a>
-      </div>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;">
+  {% for product in products %}
+  <div class="product-card" style="position:relative;">
+    <!-- Remove button -->
+    <a href="{% url 'shop:remove_from_favorites' product.id %}"
+       title="Olib tashlash"
+       style="position:absolute;top:12px;right:12px;z-index:2;background:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.12);color:#ef4444;text-decoration:none;transition:transform .15s;"
+       onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+      <span class="material-icons-round" style="font-size:18px;">close</span>
+    </a>
+    <a href="{{ product.get_absolute_url }}" style="display:block;text-decoration:none;">
+      <img class="product-card-img" src="{{ product.image.url }}" alt="{{ product.title }}">
+    </a>
+    <div class="product-card-body">
+      <a href="{{ product.get_absolute_url }}" style="text-decoration:none;">
+        <h3 class="product-card-title">{{ product.title }}</h3>
+      </a>
+      <p class="product-card-price mt-2 mb-3">{{ product.price|floatformat:0 }} <small>so'm</small></p>
+      <a href="{{ product.get_absolute_url }}" class="btn-card btn-card-primary">Ko'rish</a>
     </div>
-    {% endfor %}
   </div>
+  {% endfor %}
+</div>
+
 {% else %}
-<div class="col-12 empty-state">
-  <svg xmlns="http://www.w3.org/2000/svg" width="110" height="110" fill="#6c757d" viewBox="0 0 16 16">
-    <path d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
-  </svg>
+<div class="empty-state">
+  <div class="empty-state-icon"><span class="material-icons-round">favorite_border</span></div>
   <h4>Sevimlilar bo'sh</h4>
-  <p>Siz hali hech qanday mahsulotni sevimlilarga qo'shmadingiz.</p>
-  <a href="{% url 'shop:home_page' %}" class="btn btn-primary mt-2">
-    <i class="material-icons align-middle" style="font-size:18px;">store</i> Do'konga qaytish
+  <p>Siz hali hech qanday mahsulotni sevimlilarga qo'shmadingiz.<br>Mahsulotlarni ko'rib, yoqqanlarini saqlang.</p>
+  <a href="{% url 'shop:home_page' %}" class="btn-primary-custom" style="display:inline-flex;">
+    <span class="material-icons-round" style="font-size:18px;">storefront</span>
+    Do'konga o'tish
   </a>
 </div>
 {% endif %}
+
 {% endblock %}

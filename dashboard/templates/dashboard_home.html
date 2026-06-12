@@ -1,101 +1,122 @@
 {% extends "dashboard.html" %}
 {% block content %}
 
-<!-- Statistika kartochkalari -->
-<div class="row g-3 mb-4">
-  <div class="col-6">
-    <a href="{% url 'dashboard:products' %}" class="text-decoration-none">
-      <div class="p-3 rounded border bg-primary bg-opacity-10 d-flex align-items-center gap-3">
-        <i class="material-icons text-primary" style="font-size:36px;">inventory_2</i>
+<!-- Stat cards -->
+<div class="row g-4 mb-5">
+  <div class="col-sm-6 col-xl-3">
+    <a href="{% url 'dashboard:products' %}" style="text-decoration:none;">
+      <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;padding:24px;display:flex;align-items:center;gap:16px;transition:box-shadow .2s;" onmouseover="this.style.boxShadow='0 8px 24px rgba(99,102,241,.14)'" onmouseout="this.style.boxShadow='none'">
+        <div style="width:52px;height:52px;background:linear-gradient(135deg,#6366f1,#4f46e5);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <span class="material-icons-round" style="font-size:26px;color:#fff;">inventory_2</span>
+        </div>
         <div>
-          <div class="fw-bold fs-4 text-primary">{{ products_count }}</div>
-          <div class="text-muted small">Mahsulotlar</div>
+          <div style="font-size:1.8rem;font-weight:800;color:#0f172a;line-height:1;">{{ products_count }}</div>
+          <div style="font-size:.8rem;color:#64748b;font-weight:500;margin-top:4px;">Mahsulotlar</div>
         </div>
       </div>
     </a>
   </div>
-  <div class="col-6">
-    <a href="{% url 'dashboard:orders' %}" class="text-decoration-none">
-      <div class="p-3 rounded border bg-success bg-opacity-10 d-flex align-items-center gap-3">
-        <i class="material-icons text-success" style="font-size:36px;">receipt_long</i>
+  <div class="col-sm-6 col-xl-3">
+    <a href="{% url 'dashboard:orders' %}" style="text-decoration:none;">
+      <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;padding:24px;display:flex;align-items:center;gap:16px;transition:box-shadow .2s;" onmouseover="this.style.boxShadow='0 8px 24px rgba(16,185,129,.14)'" onmouseout="this.style.boxShadow='none'">
+        <div style="width:52px;height:52px;background:linear-gradient(135deg,#10b981,#059669);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <span class="material-icons-round" style="font-size:26px;color:#fff;">receipt_long</span>
+        </div>
         <div>
-          <div class="fw-bold fs-4 text-success">{{ orders_count }}</div>
-          <div class="text-muted small">Buyurtmalar</div>
+          <div style="font-size:1.8rem;font-weight:800;color:#0f172a;line-height:1;">{{ orders_count }}</div>
+          <div style="font-size:.8rem;color:#64748b;font-weight:500;margin-top:4px;">Buyurtmalar</div>
         </div>
       </div>
     </a>
   </div>
-  <div class="col-6">
-    <a href="{% url 'dashboard:users_list' %}" class="text-decoration-none">
-      <div class="p-3 rounded border bg-warning bg-opacity-10 d-flex align-items-center gap-3">
-        <i class="material-icons text-warning" style="font-size:36px;">group</i>
+  <div class="col-sm-6 col-xl-3">
+    <a href="{% url 'dashboard:users_list' %}" style="text-decoration:none;">
+      <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;padding:24px;display:flex;align-items:center;gap:16px;transition:box-shadow .2s;" onmouseover="this.style.boxShadow='0 8px 24px rgba(245,158,11,.14)'" onmouseout="this.style.boxShadow='none'">
+        <div style="width:52px;height:52px;background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <span class="material-icons-round" style="font-size:26px;color:#fff;">group</span>
+        </div>
         <div>
-          <div class="fw-bold fs-4 text-warning">{{ users_count }}</div>
-          <div class="text-muted small">Foydalanuvchilar</div>
+          <div style="font-size:1.8rem;font-weight:800;color:#0f172a;line-height:1;">{{ users_count }}</div>
+          <div style="font-size:.8rem;color:#64748b;font-weight:500;margin-top:4px;">Foydalanuvchilar</div>
         </div>
       </div>
     </a>
   </div>
-  <div class="col-6">
-    <a href="{% url 'dashboard:users_list' %}" class="text-decoration-none">
-      <div class="p-3 rounded border bg-info bg-opacity-10 d-flex align-items-center gap-3">
-        <i class="material-icons text-info" style="font-size:36px;">admin_panel_settings</i>
+  <div class="col-sm-6 col-xl-3">
+    <a href="{% url 'dashboard:users_list' %}" style="text-decoration:none;">
+      <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;padding:24px;display:flex;align-items:center;gap:16px;transition:box-shadow .2s;" onmouseover="this.style.boxShadow='0 8px 24px rgba(59,130,246,.14)'" onmouseout="this.style.boxShadow='none'">
+        <div style="width:52px;height:52px;background:linear-gradient(135deg,#3b82f6,#2563eb);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <span class="material-icons-round" style="font-size:26px;color:#fff;">admin_panel_settings</span>
+        </div>
         <div>
-          <div class="fw-bold fs-4 text-info">{{ managers_count }}</div>
-          <div class="text-muted small">Managerlar</div>
+          <div style="font-size:1.8rem;font-weight:800;color:#0f172a;line-height:1;">{{ managers_count }}</div>
+          <div style="font-size:.8rem;color:#64748b;font-weight:500;margin-top:4px;">Managerlar</div>
         </div>
       </div>
     </a>
   </div>
 </div>
 
-<!-- Tezkor harakatlar -->
-<h6 class="text-muted fw-bold mb-2">TEZKOR HARAKATLAR</h6>
-<div class="d-flex flex-wrap gap-2 mb-4">
-  <a href="{% url 'dashboard:add_product' %}" class="btn btn-outline-primary btn-sm">
-    <i class="material-icons align-middle" style="font-size:16px;">add_box</i> Mahsulot qo'shish
-  </a>
-  <a href="{% url 'dashboard:add_category' %}" class="btn btn-outline-secondary btn-sm">
-    <i class="material-icons align-middle" style="font-size:16px;">create_new_folder</i> Kategoriya qo'shish
-  </a>
-  <a href="{% url 'dashboard:add_manager' %}" class="btn btn-outline-info btn-sm">
-    <i class="material-icons align-middle" style="font-size:16px;">person_add</i> Manager qo'shish
-  </a>
+<!-- Quick actions -->
+<div style="margin-bottom:32px;">
+  <h2 style="font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin-bottom:14px;">Tezkor harakatlar</h2>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;">
+    <a href="{% url 'dashboard:add_product' %}" class="btn-dash-primary">
+      <span class="material-icons-round" style="font-size:16px;">add_box</span> Mahsulot qo'shish
+    </a>
+    <a href="{% url 'dashboard:add_category' %}" class="btn-dash-outline">
+      <span class="material-icons-round" style="font-size:16px;">create_new_folder</span> Kategoriya qo'shish
+    </a>
+    <a href="{% url 'dashboard:add_manager' %}" class="btn-dash-outline">
+      <span class="material-icons-round" style="font-size:16px;">person_add</span> Manager qo'shish
+    </a>
+  </div>
 </div>
 
-<!-- So'nggi buyurtmalar -->
-<h6 class="text-muted fw-bold mb-2">SO'NGGI BUYURTMALAR</h6>
-{% if recent_orders %}
-<table class="table table-hover align-middle table-sm">
-  <thead class="table-light">
-    <tr>
-      <th>#</th>
-      <th>Foydalanuvchi</th>
-      <th>Summa</th>
-      <th>Holat</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for order in recent_orders %}
-    <tr>
-      <td class="text-muted small">{{ order.id }}</td>
-      <td>{{ order.user.full_name }}</td>
-      <td>{{ order.get_total_price }} so'm</td>
-      <td>
-        {% if order.status %}
-          <span class="badge bg-success">Muvaffaqiyatli</span>
-        {% else %}
-          <span class="badge bg-danger">Bekor qilingan</span>
-        {% endif %}
-      </td>
-      <td><a href="{% url 'dashboard:order_detail' order.id %}" class="btn btn-outline-primary btn-sm">Ko'rish</a></td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-{% else %}
-<p class="text-muted">Hali buyurtmalar yo'q.</p>
-{% endif %}
+<!-- Recent orders -->
+<div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+    <h2 style="font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin:0;">So'nggi buyurtmalar</h2>
+    <a href="{% url 'dashboard:orders' %}" style="font-size:.8rem;color:#6366f1;font-weight:600;text-decoration:none;">Barchasini ko'rish →</a>
+  </div>
+
+  {% if recent_orders %}
+  <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;overflow:hidden;">
+    <table class="table dash-table mb-0">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Foydalanuvchi</th>
+          <th>Summa</th>
+          <th>Holat</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in recent_orders %}
+        <tr>
+          <td style="color:#94a3b8;font-weight:500;">{{ order.id }}</td>
+          <td style="font-weight:600;">{{ order.user.full_name }}</td>
+          <td style="color:#6366f1;font-weight:700;">{{ order.get_total_price|floatformat:0 }} so'm</td>
+          <td>
+            {% if order.status %}
+              <span style="background:#d1fae5;color:#065f46;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">Muvaffaqiyatli</span>
+            {% else %}
+              <span style="background:#fee2e2;color:#991b1b;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">Bekor qilingan</span>
+            {% endif %}
+          </td>
+          <td><a href="{% url 'dashboard:order_detail' order.id %}" class="btn-dash-outline" style="padding:5px 12px;">Ko'rish</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;padding:48px;text-align:center;">
+    <span class="material-icons-round" style="font-size:48px;color:#e2e8f0;">receipt_long</span>
+    <p style="color:#94a3b8;margin:12px 0 0;font-size:.9rem;">Hali buyurtmalar yo'q</p>
+  </div>
+  {% endif %}
+</div>
 
 {% endblock %}

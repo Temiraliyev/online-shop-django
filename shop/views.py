@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from shop.models import Product, Category
 from cart.forms import QuantityForm
@@ -36,7 +36,7 @@ def product_detail(request, slug):
 		'favorites':'favorites',
 		'related_products':related_products
 	}
-	if request.user.likes.filter(id=product.id).first():
+	if request.user.is_authenticated and request.user.likes.filter(id=product.id).first():
 		context['favorites'] = 'remove'
 	return render(request, 'product_detail.html', context)
 

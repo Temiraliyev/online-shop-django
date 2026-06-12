@@ -1,15 +1,29 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<div class="col-md-5 col-lg-4 mx-auto mt-4">
-  <div class="card border-0 shadow-sm p-4">
-    <h4 class="fw-bold mb-1"><i class="material-icons align-middle">manage_accounts</i> Profilni tahrirlash</h4>
-    <hr>
-    <form method="POST">
-      {% csrf_token %}
-      {{ form|crispy }}
-      <button class="btn btn-primary w-100 mt-2" type="submit">Saqlash</button>
-    </form>
+
+<div style="max-width:520px;margin:40px auto;">
+  <div style="background:#fff;border-radius:24px;border:1px solid #e2e8f0;box-shadow:0 4px 24px rgba(99,102,241,.08);overflow:hidden;">
+    <div style="padding:24px 32px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:12px;">
+      <div style="width:42px;height:42px;background:#e0e7ff;border-radius:12px;display:flex;align-items:center;justify-content:center;">
+        <span class="material-icons-round" style="font-size:22px;color:#6366f1;">manage_accounts</span>
+      </div>
+      <div>
+        <h1 style="font-size:1.2rem;font-weight:700;margin:0;color:#0f172a;">Profilni tahrirlash</h1>
+        <p style="color:#94a3b8;font-size:.8rem;margin:0;">Shaxsiy ma'lumotlaringizni yangilang</p>
+      </div>
+    </div>
+    <div style="padding:28px 32px;">
+      <form method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="btn-primary-custom" type="submit" style="width:100%;justify-content:center;padding:13px;font-size:.95rem;border-radius:12px;margin-top:8px;">
+          <span class="material-icons-round" style="font-size:18px;">save</span>
+          Saqlash
+        </button>
+      </form>
+    </div>
   </div>
 </div>
+
 {% endblock %}

@@ -1,41 +1,62 @@
 {% extends "base.html" %}
 {% block content %}
 
+<h1 class="section-heading mb-4">
+  <span class="material-icons-round">receipt_long</span>
+  Buyurtmalarim
+</h1>
+
 {% if orders %}
-  <h4 class="fw-bold mb-3"><i class="material-icons align-middle">receipt_long</i> Buyurtmalarim</h4>
-  <hr>
+<div style="display:flex;flex-direction:column;gap:16px;max-width:780px;">
   {% for order in orders %}
-  <div class="col-md-8 mb-4 border rounded p-4 bg-white shadow-sm">
-    <div class="d-flex justify-content-between align-items-center mb-2">
-      <span class="text-muted small">Buyurtma #{{ order.id }}</span>
-      {% if order.status %}
-        <span class="badge bg-success fs-6">✓ Muvaffaqiyatli</span>
-      {% else %}
-        <span class="badge bg-danger fs-6">✗ Bekor qilingan</span>
-      {% endif %}
+  <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;overflow:hidden;box-shadow:0 2px 12px rgba(99,102,241,.05);">
+    <!-- Order header -->
+    <div style="padding:16px 24px;background:#f8fafc;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+      <div>
+        <span style="font-size:.8rem;color:#94a3b8;font-weight:500;text-transform:uppercase;letter-spacing:.05em;">Buyurtma #{{ order.id }}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span style="font-weight:700;color:#0f172a;">{{ order.get_total_price|floatformat:0 }} so'm</span>
+        {% if order.status %}
+        <span style="display:inline-flex;align-items:center;gap:4px;background:#d1fae5;color:#065f46;font-size:.8rem;font-weight:700;padding:4px 12px;border-radius:50px;">
+          <span class="material-icons-round" style="font-size:14px;">check_circle</span> Muvaffaqiyatli
+        </span>
+        {% else %}
+        <span style="display:inline-flex;align-items:center;gap:4px;background:#fee2e2;color:#991b1b;font-size:.8rem;font-weight:700;padding:4px 12px;border-radius:50px;">
+          <span class="material-icons-round" style="font-size:14px;">cancel</span> Bekor qilingan
+        </span>
+        {% endif %}
+      </div>
     </div>
-    <div class="border-top pt-3">
+    <!-- Order items -->
+    <div style="padding:16px 24px;">
       {% for item in order.items.all %}
-      <div class="border-bottom pb-2 mb-2">
-        <p class="mb-1">Mahsulot: <a class="text-decoration-none fw-semibold" href="{{ item.product.get_absolute_url }}">{{ item.product.title }}</a></p>
-        <p class="mb-1 text-muted small">Narx: {{ item.price }} so'm &nbsp;|&nbsp; Miqdor: {{ item.quantity }}</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;{% if not forloop.last %}border-bottom:1px solid #f1f5f9;{% endif %}">
+        <div>
+          <a href="{{ item.product.get_absolute_url }}"
+             style="font-weight:600;font-size:.9rem;color:#0f172a;text-decoration:none;">
+            {{ item.product.title }}
+          </a>
+          <p style="color:#94a3b8;font-size:.8rem;margin:2px 0 0;">{{ item.quantity }} dona</p>
+        </div>
+        <div style="font-weight:600;color:#6366f1;font-size:.9rem;text-align:right;">
+          {{ item.price|floatformat:0 }} so'm
+        </div>
       </div>
       {% endfor %}
     </div>
-    <div class="mt-2 fw-bold">Jami: <span class="text-primary">{{ order.get_total_price }} so'm</span></div>
   </div>
   {% endfor %}
+</div>
 
 {% else %}
-<div class="col-12 empty-state">
-  <svg xmlns="http://www.w3.org/2000/svg" width="110" height="110" fill="#6c757d" viewBox="0 0 16 16">
-    <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-    <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
-  </svg>
+<div class="empty-state">
+  <div class="empty-state-icon"><span class="material-icons-round">receipt_long</span></div>
   <h4>Buyurtmalar yo'q</h4>
-  <p>Siz hali hech qanday buyurtma bermagansiz.</p>
-  <a href="{% url 'shop:home_page' %}" class="btn btn-primary mt-2">
-    <i class="material-icons align-middle" style="font-size:18px;">store</i> Do'konga qaytish
+  <p>Siz hali hech qanday buyurtma bermagansiz.<br>Do'konimizdan xarid qiling!</p>
+  <a href="{% url 'shop:home_page' %}" class="btn-primary-custom" style="display:inline-flex;">
+    <span class="material-icons-round" style="font-size:18px;">storefront</span>
+    Do'konga o'tish
   </a>
 </div>
 {% endif %}

@@ -1,21 +1,42 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<div class="col-md-5 col-lg-4 mx-auto mt-4">
-  <div class="card border-0 shadow-sm p-4">
-    <h4 class="fw-bold mb-1"><i class="material-icons align-middle">login</i> Kirish</h4>
-    <hr>
-    <form method="POST">
-      {% csrf_token %}
-      {{ form|crispy }}
-      <button class="btn btn-primary w-100 mt-2" type="submit">Kirish</button>
-    </form>
-    <div class="mt-2">
-      <small><a class="text-danger text-decoration-none" href="{% url 'accounts:password_reset' %}">Parolni unutdingizmi?</a></small>
-    </div>
-    <div class="border-top pt-3 mt-3">
-      <small class="text-muted">Yangi foydalanuvchimisiz? <a class="text-decoration-none" href="{% url 'accounts:user_register' %}">Ro'yxatdan o'tish</a></small>
+
+<div style="min-height:60vh;display:flex;align-items:center;justify-content:center;">
+  <div style="width:100%;max-width:440px;">
+    <div style="background:#fff;border-radius:24px;border:1px solid #e2e8f0;box-shadow:0 8px 40px rgba(99,102,241,.12);overflow:hidden;">
+      <!-- Header -->
+      <div style="background:linear-gradient(135deg,#6366f1,#4f46e5);padding:36px 36px 28px;text-align:center;">
+        <div style="width:60px;height:60px;background:rgba(255,255,255,.2);border-radius:16px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+          <span class="material-icons-round" style="font-size:30px;color:#fff;">login</span>
+        </div>
+        <h1 style="color:#fff;font-size:1.6rem;font-weight:800;margin:0 0 6px;">Xush kelibsiz</h1>
+        <p style="color:rgba(255,255,255,.7);margin:0;font-size:.9rem;">Hisobingizga kiring</p>
+      </div>
+      <!-- Form -->
+      <div style="padding:32px 36px;">
+        <form method="POST">
+          {% csrf_token %}
+          {{ form|crispy }}
+          <button class="btn-primary-custom" type="submit" style="width:100%;justify-content:center;padding:14px;font-size:1rem;border-radius:12px;margin-top:8px;">
+            <span class="material-icons-round" style="font-size:20px;">login</span>
+            Kirish
+          </button>
+        </form>
+        <div style="text-align:center;margin-top:16px;">
+          <a href="{% url 'accounts:password_reset' %}" style="color:#64748b;font-size:.85rem;text-decoration:none;" onmouseover="this.style.color='#6366f1'" onmouseout="this.style.color='#64748b'">
+            Parolni unutdingizmi?
+          </a>
+        </div>
+        <div style="border-top:1px solid #e2e8f0;margin-top:24px;padding-top:20px;text-align:center;">
+          <p style="color:#94a3b8;font-size:.875rem;margin:0;">
+            Yangi foydalanuvchimisiz?
+            <a href="{% url 'accounts:user_register' %}" style="color:#6366f1;font-weight:600;text-decoration:none;">Ro'yxatdan o'tish</a>
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
 {% endblock %}

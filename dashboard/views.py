@@ -12,15 +12,13 @@ from .forms import AddProductForm, AddCategoryForm, EditProductForm, AddManagerF
 
 def is_manager(user):
     try:
-        if not user.is_manager:
-            raise Http404
-        return True
-    except:
-        raise Http404
+        return bool(user.is_authenticated and user.is_manager)
+    except Exception:
+        return False
 
 
-@user_passes_test(is_manager)
-@login_required
+@login_required(login_url='/accounts/login/manager/')
+@user_passes_test(is_manager, login_url='/accounts/login/manager/')
 def dashboard_home(request):
     context = {
         'title': 'Boshqaruv paneli',
@@ -33,16 +31,16 @@ def dashboard_home(request):
     return render(request, 'dashboard_home.html', context)
 
 
-@user_passes_test(is_manager)
-@login_required
+@login_required(login_url='/accounts/login/manager/')
+@user_passes_test(is_manager, login_url='/accounts/login/manager/')
 def products(request):
     products = Product.objects.all()
     context = {'title':'Products' ,'products':products}
     return render(request, 'products.html', context)
 
 
-@user_passes_test(is_manager)
-@login_required
+@login_required(login_url='/accounts/login/manager/')
+@user_passes_test(is_manager, login_url='/accounts/login/manager/')
 def add_product(request):
     if request.method == 'POST':
         form = AddProductForm(request.POST, request.FILES)
@@ -56,16 +54,16 @@ def add_product(request):
     return render(request, 'add_product.html', context)
 
 
-@user_passes_test(is_manager)
-@login_required
+@login_required(login_url='/accounts/login/manager/')
+@user_passes_test(is_manager, login_url='/accounts/login/manager/')
 def delete_product(request, id):
     product = Product.objects.filter(id=id).delete()
     messages.success(request, 'product has been deleted!', 'success')
     return redirect('dashboard:products')
 
 
-@user_passes_test(is_manager)
-@login_required
+@login_required(login_url='/accounts/login/manager/')
+@user_passes_test(is_manager, login_url='/accounts/login/manager/')
 def edit_product(request, id):
     product = get_object_or_404(Product, id=id)
     if request.method == 'POST':
@@ -80,8 +78,8 @@ def edit_product(request, id):
     return render(request, 'edit_product.html', context)
 
 
-@user_passes_test(is_manager)
-@login_required
+@login_required(login_url='/accounts/login/manager/')
+@user_passes_test(is_manager, login_url='/accounts/login/manager/')
 def add_category(request):
     if request.method == 'POST':
         form = AddCategoryForm(request.POST)
@@ -95,16 +93,16 @@ def add_category(request):
     return render(request, 'add_category.html', context)
 
 
-@user_passes_test(is_manager)
-@login_required
+@login_required(login_url='/accounts/login/manager/')
+@user_passes_test(is_manager, login_url='/accounts/login/manager/')
 def orders(request):
     orders = Order.objects.all()
     context = {'title':'Orders', 'orders':orders}
     return render(request, 'orders.html', context)
 
 
-@user_passes_test(is_manager)
-@login_required
+@login_required(login_url='/accounts/login/manager/')
+@user_passes_test(is_manager, login_url='/accounts/login/manager/')
 def order_detail(request, id):
     order = Order.objects.filter(id=id).first()
     items = OrderItem.objects.filter(order=order).all()
@@ -112,16 +110,16 @@ def order_detail(request, id):
     return render(request, 'order_detail.html', context)
 
 
-@user_passes_test(is_manager)
-@login_required
+@login_required(login_url='/accounts/login/manager/')
+@user_passes_test(is_manager, login_url='/accounts/login/manager/')
 def users_list(request):
     users = User.objects.all().order_by('-is_manager', 'full_name')
     context = {'title': 'Foydalanuvchilar', 'users': users}
     return render(request, 'users.html', context)
 
 
-@user_passes_test(is_manager)
-@login_required
+@login_required(login_url='/accounts/login/manager/')
+@user_passes_test(is_manager, login_url='/accounts/login/manager/')
 def toggle_manager(request, id):
     user = get_object_or_404(User, id=id)
     if user == request.user:
@@ -136,8 +134,8 @@ def toggle_manager(request, id):
     return redirect('dashboard:users_list')
 
 
-@user_passes_test(is_manager)
-@login_required
+@login_required(login_url='/accounts/login/manager/')
+@user_passes_test(is_manager, login_url='/accounts/login/manager/')
 def add_manager(request):
     if request.method == 'POST':
         form = AddManagerForm(request.POST)

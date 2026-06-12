@@ -1,69 +1,67 @@
 {% extends "dashboard.html" %}
 {% block content %}
 
-<div class="d-flex justify-content-between align-items-center mb-3">
-  <span class="text-muted small">Jami: <strong>{{ users|length }}</strong> ta foydalanuvchi</span>
-  <a href="{% url 'dashboard:add_manager' %}" class="btn btn-primary btn-sm">
-    <i class="material-icons align-middle" style="font-size:16px;">person_add</i> Yangi manager
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+  <span style="color:#64748b;font-size:.875rem;">Jami: <strong style="color:#0f172a;">{{ users|length }}</strong> ta foydalanuvchi</span>
+  <a href="{% url 'dashboard:add_manager' %}" class="btn-dash-primary">
+    <span class="material-icons-round" style="font-size:16px;">person_add</span> Yangi manager
   </a>
 </div>
 
 {% if users %}
-<table class="table table-hover align-middle">
-  <thead class="table-light">
-    <tr>
-      <th>#</th>
-      <th>Ism</th>
-      <th>Email</th>
-      <th>Rol</th>
-      <th>Holat</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for user in users %}
-    <tr>
-      <td>{{ forloop.counter }}</td>
-      <td class="fw-semibold">{{ user.full_name }}</td>
-      <td class="text-muted small">{{ user.email }}</td>
-      <td>
-        {% if user.is_manager %}
-          <span class="badge bg-primary">Manager</span>
-        {% else %}
-          <span class="badge bg-secondary">Foydalanuvchi</span>
-        {% endif %}
-      </td>
-      <td>
-        {% if user.is_active %}
-          <span class="badge bg-success">Faol</span>
-        {% else %}
-          <span class="badge bg-danger">Bloklangan</span>
-        {% endif %}
-      </td>
-      <td>
-        {% if user != request.user %}
-          <a href="{% url 'dashboard:toggle_manager' user.id %}"
-             class="btn btn-sm {% if user.is_manager %}btn-outline-danger{% else %}btn-outline-success{% endif %}">
-            {% if user.is_manager %}
-              <i class="material-icons align-middle" style="font-size:15px;">remove_moderator</i> Olish
-            {% else %}
-              <i class="material-icons align-middle" style="font-size:15px;">admin_panel_settings</i> Berish
-            {% endif %}
-          </a>
-        {% else %}
-          <span class="text-muted small">Siz</span>
-        {% endif %}
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;overflow:hidden;">
+  <table class="table dash-table mb-0">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Ism</th>
+        <th>Email</th>
+        <th>Rol</th>
+        <th>Holat</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td style="color:#94a3b8;">{{ forloop.counter }}</td>
+        <td style="font-weight:600;color:#0f172a;">{{ user.full_name }}</td>
+        <td style="color:#64748b;font-size:.82rem;">{{ user.email }}</td>
+        <td>
+          {% if user.is_manager %}
+            <span style="background:#e0e7ff;color:#4f46e5;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">Manager</span>
+          {% else %}
+            <span style="background:#f1f5f9;color:#64748b;font-size:.75rem;font-weight:600;padding:3px 10px;border-radius:50px;">Foydalanuvchi</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if user.is_active %}
+            <span style="background:#d1fae5;color:#065f46;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">Faol</span>
+          {% else %}
+            <span style="background:#fee2e2;color:#991b1b;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">Bloklangan</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if user != request.user %}
+            <a href="{% url 'dashboard:toggle_manager' user.id %}"
+               class="{% if user.is_manager %}btn-dash-danger{% else %}btn-dash-outline{% endif %}"
+               style="padding:5px 12px;">
+              <span class="material-icons-round" style="font-size:14px;">{% if user.is_manager %}remove_moderator{% else %}admin_panel_settings{% endif %}</span>
+              {% if user.is_manager %}Olish{% else %}Berish{% endif %}
+            </a>
+          {% else %}
+            <span style="color:#94a3b8;font-size:.8rem;font-style:italic;">Siz</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% else %}
-<div class="text-center py-5">
-  <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#adb5bd" viewBox="0 0 16 16">
-    <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
-  </svg>
-  <h5 class="text-muted mt-3">Foydalanuvchilar yo'q</h5>
+<div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;padding:80px;text-align:center;">
+  <span class="material-icons-round" style="font-size:64px;color:#e2e8f0;">group</span>
+  <h3 style="color:#94a3b8;font-size:1.1rem;font-weight:600;margin:16px 0 0;">Foydalanuvchilar yo'q</h3>
 </div>
 {% endif %}
 

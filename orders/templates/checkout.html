@@ -1,21 +1,53 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="col-md-2"></div>
-<div class="col-md-7 border rounded p-4 bg-white shadow-sm">
-  <h4 class="fw-bold mb-1"><i class="material-icons align-middle text-success">payment</i> To'lov</h4>
-  <hr>
-  <h5 class="text-muted mb-3">Buyurtma summasi: <span class="text-primary fw-bold">{{ order.get_total_price }} so'm</span></h5>
-  <p class="mb-4">Davom etib to'lovni amalga oshirasizmi?</p>
-  <div class="d-flex gap-3">
-    <a href="{% url 'cart:show_cart' %}" class="btn btn-outline-danger px-4">
-      <i class="material-icons align-middle" style="font-size:18px;">arrow_back</i> Savatchaga qaytish
-    </a>
-    <a href="{% url 'orders:pay_order' order.id %}" class="btn btn-success px-4">
-      <i class="material-icons align-middle" style="font-size:18px;">check_circle</i> To'lash
-    </a>
+<div style="max-width:600px;margin:40px auto;">
+  <div style="background:#fff;border-radius:24px;border:1px solid #e2e8f0;box-shadow:0 4px 24px rgba(99,102,241,.08);overflow:hidden;">
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#6366f1,#4f46e5);padding:32px 36px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+        <div style="width:44px;height:44px;background:rgba(255,255,255,.2);border-radius:12px;display:flex;align-items:center;justify-content:center;">
+          <span class="material-icons-round" style="font-size:24px;color:#fff;">payment</span>
+        </div>
+        <h1 style="color:#fff;font-size:1.5rem;font-weight:800;margin:0;">To'lovni tasdiqlash</h1>
+      </div>
+      <p style="color:rgba(255,255,255,.75);margin:0;font-size:.9rem;">Buyurtmangizni tekshirib, to'lovni amalga oshiring</p>
+    </div>
+
+    <!-- Body -->
+    <div style="padding:36px;">
+      <div style="background:#f8fafc;border-radius:14px;padding:20px;margin-bottom:28px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:.9rem;color:#64748b;">
+          <span>Jami mahsulotlar</span>
+          <span style="font-weight:700;color:#0f172a;font-size:1.4rem;">{{ order.get_total_price|floatformat:0 }} <span style="font-size:.875rem;font-weight:500;color:#64748b;">so'm</span></span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:.85rem;color:#64748b;">
+          <span>Yetkazib berish</span>
+          <span style="color:#10b981;font-weight:600;">Bepul</span>
+        </div>
+      </div>
+
+      <p style="color:#64748b;font-size:.9rem;line-height:1.6;margin-bottom:28px;">
+        <span class="material-icons-round" style="font-size:16px;vertical-align:middle;color:#f59e0b;">info</span>
+        Davom etib to'lovni amalga oshirganingizdan so'ng buyurtmangiz qayta ishlanadi.
+      </p>
+
+      <div style="display:flex;gap:12px;">
+        <a href="{% url 'cart:show_cart' %}"
+           style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:12px;border:1.5px solid #e2e8f0;color:#64748b;font-weight:600;font-size:.9rem;text-decoration:none;transition:border-color .15s;"
+           onmouseover="this.style.borderColor='#6366f1';this.style.color='#6366f1';"
+           onmouseout="this.style.borderColor='#e2e8f0';this.style.color='#64748b';">
+          <span class="material-icons-round" style="font-size:18px;">arrow_back</span>
+          Savatchaga qaytish
+        </a>
+        <a href="{% url 'orders:pay_order' order.id %}" class="btn-primary-custom"
+           style="flex:1;justify-content:center;font-size:.95rem;padding:14px;border-radius:12px;">
+          <span class="material-icons-round" style="font-size:18px;">check_circle</span>
+          To'lash
+        </a>
+      </div>
+    </div>
   </div>
 </div>
-<div class="col-md-2"></div>
 
 {% endblock %}
