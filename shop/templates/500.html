@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="text-align:center;padding:80px 20px;">
+  <div style="
+    width:120px;height:120px;
+    background:linear-gradient(135deg,#fee2e2,#fecaca);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 28px;
+  ">
+    <span class="material-icons-round" style="font-size:56px;color:#ef4444;">error_outline</span>
+  </div>
+
+  <h1 style="font-size:6rem;font-weight:800;color:#ef4444;line-height:1;margin-bottom:8px;">500</h1>
+  <h2 style="font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:12px;">Server xatosi</h2>
+  <p style="color:#64748b;font-size:1rem;max-width:440px;margin:0 auto 32px;line-height:1.6;">
+    Nimadir noto'g'ri ketdi. Biz bu muammo ustida ishlamoqdamiz. Iltimos, bir ozdan keyin qayta urinib ko'ring.
+  </p>
+
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+    <a href="/" class="btn-primary-custom">
+      <span class="material-icons-round" style="font-size:18px;">home</span>
+      Bosh sahifaga qaytish
+    </a>
+  </div>
+</div>
+{% endblock %}

@@ -13,10 +13,51 @@
 <!-- Product Detail Card -->
 <div style="background:#fff;border-radius:24px;border:1px solid #e2e8f0;box-shadow:0 4px 24px rgba(99,102,241,.08);overflow:hidden;margin-bottom:40px;">
   <div class="row g-0">
-    <!-- Image -->
+    <!-- Image Gallery -->
     <div class="col-md-6" style="background:#f8fafc;">
-      <img src="{{ product.image.url }}" alt="{{ product.title }}"
-           style="width:100%;height:480px;object-fit:contain;padding:24px;display:block;">
+      {% if gallery %}
+      <!-- Main image display -->
+      <div style="position:relative;overflow:hidden;">
+        <img id="mainImg" src="{{ product.image.url }}" alt="{{ product.title }}"
+             onclick="openLightbox(this.src)"
+             style="width:100%;height:420px;object-fit:contain;padding:20px;display:block;transition:opacity .2s;cursor:zoom-in;">
+        <div style="position:absolute;top:12px;right:12px;background:rgba(0,0,0,.35);border-radius:8px;padding:4px 8px;pointer-events:none;">
+          <span class="material-icons-round" style="font-size:18px;color:#fff;vertical-align:middle;">zoom_in</span>
+        </div>
+      </div>
+      <!-- Thumbnails -->
+      <div style="display:flex;gap:8px;padding:0 16px 16px;overflow-x:auto;">
+        <img src="{{ product.image.url }}" alt="Asosiy rasm"
+             onclick="switchImg(this, '{{ product.image.url }}')"
+             style="width:64px;height:64px;object-fit:cover;border-radius:10px;border:2px solid #6366f1;cursor:pointer;flex-shrink:0;">
+        {% for img in gallery %}
+        <img src="{{ img.image.url }}" alt="Rasm {{ forloop.counter }}"
+             onclick="switchImg(this, '{{ img.image.url }}')"
+             style="width:64px;height:64px;object-fit:cover;border-radius:10px;border:2px solid transparent;cursor:pointer;flex-shrink:0;transition:border-color .15s;">
+        {% endfor %}
+      </div>
+      {% else %}
+      <div style="position:relative;">
+        <img src="{{ product.image.url }}" alt="{{ product.title }}"
+             onclick="openLightbox(this.src)"
+             style="width:100%;height:480px;object-fit:contain;padding:24px;display:block;cursor:zoom-in;">
+        <div style="position:absolute;top:12px;right:12px;background:rgba(0,0,0,.35);border-radius:8px;padding:4px 8px;pointer-events:none;">
+          <span class="material-icons-round" style="font-size:18px;color:#fff;vertical-align:middle;">zoom_in</span>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Lightbox Modal -->
+      <div id="lightbox" onclick="closeLightbox()"
+           style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+        <button onclick="closeLightbox()" aria-label="Yopish"
+                style="position:fixed;top:18px;right:22px;background:rgba(255,255,255,.15);border:none;border-radius:50%;width:44px;height:44px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;transition:background .2s;"
+                onmouseover="this.style.background='rgba(255,255,255,.28)'" onmouseout="this.style.background='rgba(255,255,255,.15)'">
+          <span class="material-icons-round" style="font-size:26px;">close</span>
+        </button>
+        <img id="lightboxImg" src="" alt="{{ product.title }}"
+             onclick="event.stopPropagation()"
+             style="max-width:92vw;max-height:90vh;object-fit:contain;border-radius:12px;box-shadow:0 8px 48px rgba(0,0,0,.6);user-select:none;"></div>
     </div>
 
     <!-- Info -->
@@ -27,14 +68,53 @@
         {{ product.category }}
       </a>
 
-      <h1 style="font-size:1.9rem;font-weight:800;color:#0f172a;line-height:1.25;margin:0 0 16px;">{{ product.title }}</h1>
+      <h1 style="font-size:1.9rem;font-weight:800;color:#0f172a;line-height:1.25;margin:0 0 12px;">{{ product.title }}</h1>
+
+      <!-- Rating summary -->
+      {% if product.avg_rating %}
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+        <div style="display:flex;gap:2px;">
+          {% for i in "12345" %}
+            {% if forloop.counter <= product.avg_rating %}
+            <span class="material-icons-round" style="font-size:18px;color:#f59e0b;">star</span>
+            {% else %}
+            <span class="material-icons-round" style="font-size:18px;color:#e2e8f0;">star</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <span style="font-weight:700;color:#0f172a;font-size:.9rem;">{{ product.avg_rating }}</span>
+        <span style="color:#94a3b8;font-size:.82rem;">({{ product.reviews_count }} ta sharh)</span>
+      </div>
+      {% else %}
+      <div style="margin-bottom:14px;">
+        <span style="font-size:.82rem;color:#94a3b8;">Hali sharh yo'q</span>
+      </div>
+      {% endif %}
 
       <div style="font-size:2rem;font-weight:800;color:#6366f1;margin-bottom:20px;">
         {{ product.price|floatformat:0 }} <span style="font-size:1rem;font-weight:500;color:#64748b;">so'm</span>
       </div>
 
       {% if product.description %}
-      <p style="color:#64748b;font-size:.95rem;line-height:1.7;margin-bottom:28px;">{{ product.description }}</p>
+      <p style="color:#64748b;font-size:.95rem;line-height:1.7;margin-bottom:20px;">{{ product.description }}</p>
+      {% endif %}
+
+      <!-- Stock badge -->
+      {% if product.stock == 0 %}
+      <div style="display:inline-flex;align-items:center;gap:6px;background:#fee2e2;color:#dc2626;font-size:.82rem;font-weight:700;padding:6px 14px;border-radius:50px;margin-bottom:20px;">
+        <span class="material-icons-round" style="font-size:16px;">remove_shopping_cart</span>
+        Omborda yo'q
+      </div>
+      {% elif product.stock <= 5 %}
+      <div style="display:inline-flex;align-items:center;gap:6px;background:#fff7ed;color:#ea580c;font-size:.82rem;font-weight:700;padding:6px 14px;border-radius:50px;margin-bottom:20px;">
+        <span class="material-icons-round" style="font-size:16px;">inventory_2</span>
+        Faqat {{ product.stock }} ta qoldi!
+      </div>
+      {% else %}
+      <div style="display:inline-flex;align-items:center;gap:6px;background:#dcfce7;color:#16a34a;font-size:.82rem;font-weight:700;padding:6px 14px;border-radius:50px;margin-bottom:20px;">
+        <span class="material-icons-round" style="font-size:16px;">inventory_2</span>
+        Omborda: {{ product.stock }} ta
+      </div>
       {% endif %}
 
       <!-- Add to cart -->
@@ -42,10 +122,17 @@
         {% csrf_token %}
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
           <div style="flex:0 0 auto;">{{ form }}</div>
+          {% if product.stock == 0 %}
+          <button type="button" disabled style="padding:12px 28px;font-size:1rem;background:#e2e8f0;color:#94a3b8;border:none;border-radius:12px;cursor:not-allowed;display:inline-flex;align-items:center;gap:8px;font-weight:700;">
+            <span class="material-icons-round" style="font-size:20px;">remove_shopping_cart</span>
+            Mavjud emas
+          </button>
+          {% else %}
           <button type="submit" class="btn-primary-custom" style="padding:12px 28px;font-size:1rem;">
             <span class="material-icons-round" style="font-size:20px;">add_shopping_cart</span>
             Savatchaga qo'shish
           </button>
+          {% endif %}
         </div>
       </form>
 
@@ -81,6 +168,126 @@
   </div>
 </div>
 
+<!-- Reviews Section -->
+<div style="margin-bottom:40px;">
+  <h2 class="section-heading">
+    <span class="material-icons-round">reviews</span>
+    Sharhlar va baholashlar
+    {% if product.reviews_count %}
+    <span style="font-size:.85rem;font-weight:500;color:#64748b;">({{ product.reviews_count }} ta)</span>
+    {% endif %}
+  </h2>
+
+  <!-- Submit / Edit review -->
+  {% if request.user.is_authenticated %}
+    {% if user_review %}
+    <!-- User already reviewed -->
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:16px;padding:20px 24px;margin-bottom:24px;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+        <div>
+          <div style="font-size:.82rem;font-weight:700;color:#16a34a;margin-bottom:8px;">Sizning sharhingiz</div>
+          <div style="display:flex;gap:2px;margin-bottom:8px;">
+            {% for i in "12345" %}
+              {% if forloop.counter <= user_review.rating %}
+              <span class="material-icons-round" style="font-size:20px;color:#f59e0b;">star</span>
+              {% else %}
+              <span class="material-icons-round" style="font-size:20px;color:#e2e8f0;">star</span>
+              {% endif %}
+            {% endfor %}
+            <span style="margin-left:6px;font-weight:700;color:#0f172a;font-size:.9rem;">{{ user_review.rating }}/5</span>
+          </div>
+          {% if user_review.comment %}
+          <p style="color:#374151;font-size:.9rem;margin:0;">{{ user_review.comment }}</p>
+          {% endif %}
+        </div>
+        <a href="{% url 'shop:delete_review' product.id %}"
+           style="display:inline-flex;align-items:center;gap:5px;color:#ef4444;font-size:.8rem;font-weight:600;text-decoration:none;"
+           onclick="return confirm('Sharhni o\'chirishni tasdiqlaysizmi?')">
+          <span class="material-icons-round" style="font-size:16px;">delete_outline</span>
+          O'chirish
+        </a>
+      </div>
+    </div>
+    {% elif can_review %}
+    <!-- Can review -->
+    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:20px 24px;margin-bottom:24px;">
+      <div style="font-size:.85rem;font-weight:700;color:#0f172a;margin-bottom:14px;">Sharh va baho qoldiring</div>
+      <form method="post" action="{% url 'shop:submit_review' product.id %}">
+        {% csrf_token %}
+        <!-- Star rating -->
+        <div style="margin-bottom:14px;">
+          <label style="font-size:.82rem;color:#64748b;font-weight:600;display:block;margin-bottom:8px;">Baho</label>
+          <div class="star-rating" style="display:flex;gap:4px;">
+            {% for i in "54321" %}
+            <input type="radio" name="rating" id="star{{ forloop.counter }}" value="{{ i }}"
+                   style="display:none;" {% if forloop.counter == 1 %}checked{% endif %}>
+            <label for="star{{ forloop.counter }}"
+                   style="font-size:32px;color:#e2e8f0;cursor:pointer;line-height:1;transition:color .1s;"
+                   class="star-lbl">&#9733;</label>
+            {% endfor %}
+          </div>
+        </div>
+        <div style="margin-bottom:14px;">
+          <label style="font-size:.82rem;color:#64748b;font-weight:600;display:block;margin-bottom:6px;">Izoh (ixtiyoriy)</label>
+          <textarea name="comment" rows="3" class="form-control" placeholder="Mahsulot haqida fikringizni yozing..." style="border-radius:10px;font-size:.9rem;border-color:#e2e8f0;resize:none;"></textarea>
+        </div>
+        <button type="submit" class="btn-primary-custom" style="padding:10px 22px;font-size:.88rem;">
+          <span class="material-icons-round" style="font-size:18px;">send</span>
+          Sharh qoldirish
+        </button>
+      </form>
+    </div>
+    {% else %}
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:16px 20px;margin-bottom:24px;font-size:.85rem;color:#64748b;">
+      <span class="material-icons-round" style="font-size:16px;vertical-align:middle;margin-right:6px;">info</span>
+      Sharh qoldirish uchun mahsulotni sotib olib, yetkazib olganingizdan keyin imkoniyat paydo bo'ladi.
+    </div>
+    {% endif %}
+  {% else %}
+  <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:16px;padding:16px 20px;margin-bottom:24px;font-size:.85rem;color:#64748b;">
+    <a href="{% url 'accounts:user_login' %}" style="color:#6366f1;font-weight:600;">Kirish</a> orqali sharh qoldiring.
+  </div>
+  {% endif %}
+
+  <!-- Reviews list -->
+  {% if reviews %}
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    {% for review in reviews %}
+    <div style="background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:18px 22px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:36px;height:36px;background:linear-gradient(135deg,#6366f1,#4f46e5);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.9rem;flex-shrink:0;">
+            {{ review.user.full_name|slice:":1"|upper }}
+          </div>
+          <div>
+            <div style="font-weight:700;font-size:.88rem;color:#0f172a;">{{ review.user.full_name }}</div>
+            <div style="font-size:.75rem;color:#94a3b8;">{{ review.created|date:"d.m.Y" }}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:2px;">
+          {% for i in "12345" %}
+            {% if forloop.counter <= review.rating %}
+            <span class="material-icons-round" style="font-size:16px;color:#f59e0b;">star</span>
+            {% else %}
+            <span class="material-icons-round" style="font-size:16px;color:#e2e8f0;">star</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      {% if review.comment %}
+      <p style="color:#374151;font-size:.9rem;margin:0;line-height:1.6;">{{ review.comment }}</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="text-align:center;padding:48px 20px;color:#94a3b8;">
+    <span class="material-icons-round" style="font-size:48px;color:#e2e8f0;display:block;margin-bottom:12px;">rate_review</span>
+    Hali hech qanday sharh yo'q. Birinchi bo'lib sharh qoldiring!
+  </div>
+  {% endif %}
+</div>
+
 <!-- Related Products -->
 {% if related_products %}
 <div style="margin-bottom:40px;">
@@ -90,23 +297,62 @@
   </h2>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;">
     {% for p in related_products %}
-      {% if p != product %}
-      <div class="product-card">
-        <a href="{{ p.get_absolute_url }}" style="display:block;text-decoration:none;">
-          <img class="product-card-img" src="{{ p.image.url }}" alt="{{ p.title }}" style="aspect-ratio:1/1;">
+    <div class="product-card">
+      <a href="{{ p.get_absolute_url }}" style="display:block;text-decoration:none;">
+        <img class="product-card-img" src="{{ p.image.url }}" alt="{{ p.title }}" style="aspect-ratio:1/1;">
+      </a>
+      <div class="product-card-body">
+        <a href="{{ p.get_absolute_url }}" style="text-decoration:none;">
+          <h3 class="product-card-title">{{ p.title }}</h3>
         </a>
-        <div class="product-card-body">
-          <a href="{{ p.get_absolute_url }}" style="text-decoration:none;">
-            <h3 class="product-card-title">{{ p.title }}</h3>
-          </a>
-          <p class="product-card-price mt-1 mb-3">{{ p.price|floatformat:0 }} <small>so'm</small></p>
-          <a href="{{ p.get_absolute_url }}" class="btn-card btn-card-primary">Ko'rish</a>
+        {% if p.avg_rating %}
+        <div style="display:flex;align-items:center;gap:4px;margin:4px 0;">
+          <span class="material-icons-round" style="font-size:14px;color:#f59e0b;">star</span>
+          <span style="font-size:.78rem;font-weight:600;color:#374151;">{{ p.avg_rating }}</span>
+          <span style="font-size:.75rem;color:#94a3b8;">({{ p.reviews_count }})</span>
         </div>
+        {% endif %}
+        <p class="product-card-price mt-1 mb-3">{{ p.price|floatformat:0 }} <small>so'm</small></p>
+        <a href="{{ p.get_absolute_url }}" class="btn-card btn-card-primary">Ko'rish</a>
       </div>
-      {% endif %}
+    </div>
     {% endfor %}
   </div>
 </div>
 {% endif %}
+
+<style>
+.star-rating { direction: rtl; }
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label { color: #f59e0b !important; }
+.star-rating input:checked + label { color: #f59e0b !important; }
+</style>
+
+<script>
+function switchImg(el, url) {
+  document.getElementById('mainImg').style.opacity = '0';
+  setTimeout(() => {
+    document.getElementById('mainImg').src = url;
+    document.getElementById('mainImg').style.opacity = '1';
+  }, 150);
+  document.querySelectorAll('[onclick*="switchImg"]').forEach(t => t.style.borderColor = 'transparent');
+  el.style.borderColor = '#6366f1';
+}
+
+function openLightbox(src) {
+  const lb = document.getElementById('lightbox');
+  document.getElementById('lightboxImg').src = src;
+  lb.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+</script>
 
 {% endblock %}

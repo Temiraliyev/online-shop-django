@@ -2,7 +2,7 @@
 {% block content %}
 
 <!-- Stat cards -->
-<div class="row g-4 mb-5">
+<div class="row g-4 mb-4">
   <div class="col-sm-6 col-xl-3">
     <a href="{% url 'dashboard:products' %}" style="text-decoration:none;">
       <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;padding:24px;display:flex;align-items:center;gap:16px;transition:box-shadow .2s;" onmouseover="this.style.boxShadow='0 8px 24px rgba(99,102,241,.14)'" onmouseout="this.style.boxShadow='none'">
@@ -43,19 +43,78 @@
     </a>
   </div>
   <div class="col-sm-6 col-xl-3">
-    <a href="{% url 'dashboard:users_list' %}" style="text-decoration:none;">
-      <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;padding:24px;display:flex;align-items:center;gap:16px;transition:box-shadow .2s;" onmouseover="this.style.boxShadow='0 8px 24px rgba(59,130,246,.14)'" onmouseout="this.style.boxShadow='none'">
-        <div style="width:52px;height:52px;background:linear-gradient(135deg,#3b82f6,#2563eb);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <span class="material-icons-round" style="font-size:26px;color:#fff;">admin_panel_settings</span>
-        </div>
-        <div>
-          <div style="font-size:1.8rem;font-weight:800;color:#0f172a;line-height:1;">{{ managers_count }}</div>
-          <div style="font-size:.8rem;color:#64748b;font-weight:500;margin-top:4px;">Managerlar</div>
-        </div>
+    <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;padding:24px;display:flex;align-items:center;gap:16px;">
+      <div style="width:52px;height:52px;background:linear-gradient(135deg,#3b82f6,#2563eb);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <span class="material-icons-round" style="font-size:26px;color:#fff;">admin_panel_settings</span>
       </div>
-    </a>
+      <div>
+        <div style="font-size:1.8rem;font-weight:800;color:#0f172a;line-height:1;">{{ managers_count }}</div>
+        <div style="font-size:.8rem;color:#64748b;font-weight:500;margin-top:4px;">Managerlar</div>
+      </div>
+    </div>
   </div>
 </div>
+
+<!-- Revenue summary -->
+<div class="row g-4 mb-4">
+  <div class="col-sm-4">
+    <div style="background:linear-gradient(135deg,#6366f1,#4f46e5);border-radius:18px;padding:20px 24px;color:#fff;">
+      <div style="font-size:.8rem;font-weight:600;opacity:.8;margin-bottom:6px;">Bugungi daromad</div>
+      <div style="font-size:1.6rem;font-weight:800;">{{ today_revenue|floatformat:0 }} so'm</div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div style="background:linear-gradient(135deg,#10b981,#059669);border-radius:18px;padding:20px 24px;color:#fff;">
+      <div style="font-size:.8rem;font-weight:600;opacity:.8;margin-bottom:6px;">Haftalik daromad</div>
+      <div style="font-size:1.6rem;font-weight:800;">{{ week_revenue|floatformat:0 }} so'm</div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div style="background:linear-gradient(135deg,#f59e0b,#d97706);border-radius:18px;padding:20px 24px;color:#fff;">
+      <div style="font-size:.8rem;font-weight:600;opacity:.8;margin-bottom:6px;">Oylik daromad (30 kun)</div>
+      <div style="font-size:1.6rem;font-weight:800;">{{ month_revenue|floatformat:0 }} so'm</div>
+    </div>
+  </div>
+</div>
+
+<!-- Chart -->
+<div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;padding:24px;margin-bottom:32px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+    <h2 style="font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin:0;">Oxirgi 30 kun statistikasi</h2>
+    <div style="display:flex;gap:16px;">
+      <span style="font-size:.75rem;color:#6366f1;font-weight:600;display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;background:#6366f1;border-radius:2px;display:inline-block;"></span>Buyurtmalar</span>
+      <span style="font-size:.75rem;color:#10b981;font-weight:600;display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;background:#10b981;border-radius:2px;display:inline-block;"></span>Daromad (so'm)</span>
+    </div>
+  </div>
+  <div style="position:relative;height:260px;">
+    <canvas id="statsChart"></canvas>
+  </div>
+</div>
+
+<!-- Low stock warning -->
+{% if low_stock %}
+<div style="background:#fff;border-radius:18px;border:1.5px solid #fca5a5;padding:20px 24px;margin-bottom:32px;">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+    <span class="material-icons-round" style="color:#dc2626;font-size:22px;">warning</span>
+    <h2 style="font-size:.85rem;font-weight:700;color:#dc2626;margin:0;">Ombor ogohlantirish — kam qolgan mahsulotlar</h2>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;">
+    {% for p in low_stock %}
+    <a href="{% url 'dashboard:edit_product' p.id %}" style="display:flex;align-items:center;gap:10px;background:#fef2f2;border:1px solid #fca5a5;border-radius:12px;padding:8px 14px;text-decoration:none;">
+      <img src="{{ p.image.url }}" style="width:32px;height:32px;border-radius:6px;object-fit:cover;">
+      <div>
+        <div style="font-weight:600;font-size:.82rem;color:#0f172a;">{{ p.title|truncatechars:28 }}</div>
+        {% if p.stock == 0 %}
+        <div style="font-size:.72rem;color:#dc2626;font-weight:700;">Tugadi (0 ta)</div>
+        {% else %}
+        <div style="font-size:.72rem;color:#ea580c;font-weight:700;">Faqat {{ p.stock }} ta qoldi</div>
+        {% endif %}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
 
 <!-- Quick actions -->
 <div style="margin-bottom:32px;">
@@ -99,10 +158,16 @@
           <td style="font-weight:600;">{{ order.user.full_name }}</td>
           <td style="color:#6366f1;font-weight:700;">{{ order.get_total_price|floatformat:0 }} so'm</td>
           <td>
-            {% if order.status %}
-              <span style="background:#d1fae5;color:#065f46;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">Muvaffaqiyatli</span>
+            {% if order.delivery_status == 'delivered' %}
+              <span style="background:#d1fae5;color:#065f46;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">Yetkazildi</span>
+            {% elif order.delivery_status == 'shipping' %}
+              <span style="background:#dbeafe;color:#1e40af;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">Yetkazilmoqda</span>
+            {% elif order.delivery_status == 'processing' %}
+              <span style="background:#fef3c7;color:#92400e;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">Tayyorlanmoqda</span>
+            {% elif order.delivery_status == 'cancelled' %}
+              <span style="background:#fee2e2;color:#991b1b;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">Bekor qilindi</span>
             {% else %}
-              <span style="background:#fee2e2;color:#991b1b;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">Bekor qilingan</span>
+              <span style="background:#f1f5f9;color:#475569;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">Kutilmoqda</span>
             {% endif %}
           </td>
           <td><a href="{% url 'dashboard:order_detail' order.id %}" class="btn-dash-outline" style="padding:5px 12px;">Ko'rish</a></td>
@@ -118,5 +183,51 @@
   </div>
   {% endif %}
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+const ctx = document.getElementById('statsChart').getContext('2d');
+const labels = {{ chart_labels|safe }};
+const orders = {{ chart_orders|safe }};
+const revenues = {{ chart_revenues|safe }};
+
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: labels,
+    datasets: [
+      {
+        label: 'Buyurtmalar',
+        data: orders,
+        backgroundColor: 'rgba(99,102,241,.7)',
+        borderRadius: 6,
+        yAxisID: 'y',
+      },
+      {
+        label: 'Daromad (so\'m)',
+        data: revenues,
+        type: 'line',
+        borderColor: '#10b981',
+        backgroundColor: 'rgba(16,185,129,.08)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 2,
+        yAxisID: 'y1',
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 }, maxRotation: 0 } },
+      y: { position: 'left', beginAtZero: true, grid: { color: '#f1f5f9' }, ticks: { stepSize: 1, font: { size: 10 } } },
+      y1: { position: 'right', beginAtZero: true, grid: { display: false }, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+</script>
 
 {% endblock %}

@@ -14,8 +14,17 @@ def add_to_cart(request, product_id):
     form = QuantityForm(request.POST)
     if form.is_valid():
         data = form.cleaned_data
-        cart.add(product=product, quantity=data['quantity'])
-        messages.success(request, 'Added to your cart!', 'info')
+        quantity = data['quantity']
+        if product.stock == 0:
+            messages.error(request, 'Kechirasiz, bu mahsulot omborda mavjud emas!', 'danger')
+        elif quantity > product.stock:
+            messages.warning(request, f'Faqat {product.stock} ta mavjud. Miqdor avtomatik moslantirildi.', 'warning')
+            cart.add(product=product, quantity=product.stock)
+        else:
+            cart.add(product=product, quantity=quantity)
+            messages.success(request, 'Savatchaga qo\'shildi!', 'info')
+    else:
+        messages.error(request, 'Noto\'g\'ri miqdor kiritildi.', 'danger')
     return redirect('shop:product_detail', slug=product.slug)
 
 

@@ -9,6 +9,7 @@
         <th>#</th>
         <th>Nomi</th>
         <th>Narxi</th>
+        <th>Ombor</th>
         <th>Kategoriya</th>
         <th>Sana</th>
         <th colspan="2" style="text-align:right;">Amallar</th>
@@ -24,6 +25,15 @@
           </a>
         </td>
         <td style="color:#6366f1;font-weight:700;">{{ product.price|floatformat:0 }} so'm</td>
+        <td>
+          {% if product.stock == 0 %}
+          <span style="background:#fee2e2;color:#dc2626;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">0 ta</span>
+          {% elif product.stock <= 5 %}
+          <span style="background:#fff7ed;color:#ea580c;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">{{ product.stock }} ta</span>
+          {% else %}
+          <span style="background:#dcfce7;color:#16a34a;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">{{ product.stock }} ta</span>
+          {% endif %}
+        </td>
         <td>
           <span style="background:#e0e7ff;color:#4f46e5;font-size:.75rem;font-weight:600;padding:3px 10px;border-radius:50px;">{{ product.category }}</span>
         </td>

@@ -35,3 +35,20 @@ class User(AbstractBaseUser):
 
     def get_likes_count(self):
         return self.likes.count()
+
+
+class SavedAddress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='saved_addresses')
+    label = models.CharField(max_length=100, verbose_name="Manzil nomi")
+    full_address = models.TextField(verbose_name="To'liq manzil")
+    lat = models.FloatField(null=True, blank=True)
+    lon = models.FloatField(null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ('-created',)
+        verbose_name = "Saqlangan manzil"
+        verbose_name_plural = "Saqlangan manzillar"
+
+    def __str__(self):
+        return f"{self.user.email} — {self.label}"

@@ -1,0 +1,271 @@
+{% extends "dashboard.html" %}
+{% block content %}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+.settings-card { background:#fff; border-radius:16px; border:1px solid #e2e8f0; padding:28px; margin-bottom:24px; }
+.settings-card-title { font-weight:700; font-size:1rem; color:#0f172a; display:flex; align-items:center; gap:8px; margin-bottom:20px; }
+.settings-card-title .material-icons-round { color:#6366f1; font-size:22px; }
+.form-label { font-size:.82rem; font-weight:600; color:#475569; margin-bottom:4px; display:block; }
+.form-control { border-radius:10px; border:1.5px solid #e2e8f0; padding:10px 14px; font-size:.9rem; width:100%; transition:border-color .2s, box-shadow .2s; }
+.form-control:focus { border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,.12); outline:none; }
+.errorlist { color:#ef4444; font-size:.8rem; list-style:none; padding:0; margin:4px 0 0; }
+#shopMap { height:340px; width:100%; }
+.map-wrap { border-radius:12px; overflow:hidden; border:1.5px solid #e2e8f0; }
+.map-status-bar { padding:10px 14px; font-size:.82rem; display:flex; align-items:center; gap:8px; border-top:1px solid #f1f5f9; }
+@keyframes spin { to { transform:rotate(360deg); } }
+</style>
+
+<form method="POST" id="settingsForm">
+  {% csrf_token %}
+
+  <!-- Map -->
+  <div class="settings-card">
+    <div class="settings-card-title">
+      <span class="material-icons-round">store</span>
+      Do'kon joylashuvi
+    </div>
+
+    <!-- GPS button -->
+    <button type="button" id="gpsBtn" onclick="detectMyLocation()"
+      style="width:100%;margin-bottom:14px;padding:13px 16px;border-radius:12px;border:2px dashed #6366f1;background:#f5f3ff;color:#6366f1;font-weight:700;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:background .2s;">
+      <span class="material-icons-round" style="font-size:22px;">my_location</span>
+      Hozirgi joylashuvni do'kon manzili sifatida aniqlash
+    </button>
+
+    <!-- Map -->
+    <div class="map-wrap">
+      <div id="shopMap"></div>
+
+      <!-- Status bars -->
+      <div id="statusLoading" class="map-status-bar" style="display:none;background:#fefce8;">
+        <span class="material-icons-round" style="font-size:16px;color:#d97706;animation:spin 1s linear infinite;">refresh</span>
+        <span style="color:#92400e;">GPS joylashuvingiz aniqlanmoqda...</span>
+      </div>
+      <div id="statusGeocode" class="map-status-bar" style="display:none;background:#f0f9ff;">
+        <span class="material-icons-round" style="font-size:16px;color:#0284c7;animation:spin 1s linear infinite;">refresh</span>
+        <span style="color:#075985;">Manzil matni aniqlanmoqda...</span>
+      </div>
+      <div id="statusDone" class="map-status-bar" style="display:none;background:#f0fdf4;">
+        <span class="material-icons-round" style="font-size:18px;color:#16a34a;">check_circle</span>
+        <span id="statusDoneText" style="flex:1;color:#166534;font-size:.82rem;"></span>
+      </div>
+      <div id="statusError" class="map-status-bar" style="display:none;background:#fef2f2;">
+        <span class="material-icons-round" style="font-size:18px;color:#ef4444;">location_off</span>
+        <span id="statusErrorText" style="flex:1;color:#dc2626;font-size:.82rem;"></span>
+      </div>
+      <div id="statusHint" class="map-status-bar" style="background:#f8fafc;">
+        <span class="material-icons-round" style="font-size:16px;color:#6366f1;">touch_app</span>
+        <span style="color:#64748b;">GPS tugmasini bosing yoki xaritada istalgan joyga bosing</span>
+      </div>
+    </div>
+
+    <div class="row g-3 mt-3">
+      <div class="col-12">
+        <label class="form-label">Do'kon manzili (matn)</label>
+        {{ form.shop_address }}
+        {% if form.shop_address.errors %}<ul class="errorlist">{% for e in form.shop_address.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        <div style="font-size:.76rem;color:#94a3b8;margin-top:4px;">GPS yoki xaritadan tanlaganda avtomatik to'ldiriladi. Kerak bo'lsa qo'lda ham o'zgartiring.</div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label">Kenglik (Latitude)</label>
+        {{ form.shop_lat }}
+        {% if form.shop_lat.errors %}<ul class="errorlist">{% for e in form.shop_lat.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label">Uzunlik (Longitude)</label>
+        {{ form.shop_lon }}
+        {% if form.shop_lon.errors %}<ul class="errorlist">{% for e in form.shop_lon.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Delivery pricing -->
+  <div class="settings-card">
+    <div class="settings-card-title">
+      <span class="material-icons-round">local_shipping</span>
+      Yetkazib berish narxi
+    </div>
+
+    <div class="row g-3">
+      <div class="col-sm-6">
+        <label class="form-label">1 km uchun narx (so'm)</label>
+        {{ form.cost_per_km }}
+        {% if form.cost_per_km.errors %}<ul class="errorlist">{% for e in form.cost_per_km.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        <div style="font-size:.76rem;color:#94a3b8;margin-top:4px;">Masalan: 1000 — har bir km uchun 1 000 so'm</div>
+      </div>
+      <div class="col-sm-6">
+        <label class="form-label">Minimal yetkazib berish narxi (so'm)</label>
+        {{ form.min_delivery_cost }}
+        {% if form.min_delivery_cost.errors %}<ul class="errorlist">{% for e in form.min_delivery_cost.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+        <div style="font-size:.76rem;color:#94a3b8;margin-top:4px;">Juda yaqin manzillar uchun ham olinadigan minimal narx</div>
+      </div>
+    </div>
+
+    <!-- Preview formula -->
+    <div id="formulaPreview" style="margin-top:20px;padding:14px 16px;background:#f5f3ff;border-radius:12px;border:1px solid #ddd6fe;">
+      <div style="font-size:.82rem;font-weight:700;color:#4c1d95;margin-bottom:6px;display:flex;align-items:center;gap:6px;">
+        <span class="material-icons-round" style="font-size:16px;">calculate</span>
+        Hisob formasi ko'rinishi
+      </div>
+      <div style="font-size:.85rem;color:#6d28d9;line-height:1.6;" id="formulaText">
+        —
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;justify-content:flex-end;">
+    <a href="{% url 'dashboard:dashboard_home' %}" class="btn-dash-outline">Bekor qilish</a>
+    <button type="submit" class="btn-dash-primary">
+      <span class="material-icons-round" style="font-size:16px;">save</span>
+      Saqlash
+    </button>
+  </div>
+</form>
+
+<script>
+const initLat = parseFloat(document.getElementById('id_shop_lat').value) || 41.2995;
+const initLon = parseFloat(document.getElementById('id_shop_lon').value) || 69.2401;
+
+// ── Map setup ────────────────────────────────────────────
+const map = L.map('shopMap').setView([initLat, initLon], 14);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  maxZoom: 19,
+}).addTo(map);
+
+const shopIcon = L.divIcon({
+  html: `<div style="width:40px;height:40px;position:relative;">
+    <div style="background:#6366f1;width:40px;height:40px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #fff;box-shadow:0 3px 12px rgba(99,102,241,.55);"></div>
+    <span class="material-icons-round" style="position:absolute;top:8px;left:8px;font-size:18px;color:#fff;transform:rotate(45deg);">store</span>
+  </div>`,
+  iconSize: [40, 40], iconAnchor: [20, 40], className: '',
+});
+
+let marker = L.marker([initLat, initLon], { icon: shopIcon, draggable: true }).addTo(map);
+marker.bindTooltip("Do'kon joylashuvi", { permanent: true, direction: 'top', offset: [0, -8] });
+
+// ── Status helpers ───────────────────────────────────────
+function showStatus(type, text) {
+  ['statusLoading','statusGeocode','statusDone','statusError','statusHint'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  const el = document.getElementById(type);
+  if (el) {
+    el.style.display = 'flex';
+    if (text) {
+      const textEl = el.querySelector('span:last-child') || document.getElementById(type + 'Text');
+      if (textEl) textEl.textContent = text;
+    }
+  }
+}
+
+// ── Reverse geocode & fill address ──────────────────────
+async function reverseGeocode(lat, lon) {
+  showStatus('statusGeocode');
+  try {
+    const r = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=uz`,
+      { headers: { 'Accept-Language': 'uz' } }
+    );
+    const d = await r.json();
+    const addr = d.display_name || `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+    document.getElementById('id_shop_address').value = addr;
+    const short = addr.split(',').slice(0, 4).join(', ').trim();
+    showStatus('statusDone', `✓ Manzil aniqlandi: ${short}`);
+  } catch(_) {
+    const fallback = `${lat.toFixed(5)}, ${lon.toFixed(5)}`;
+    document.getElementById('id_shop_address').value = fallback;
+    showStatus('statusDone', `Koordinatalar saqlandi: ${fallback}`);
+  }
+}
+
+// ── Update lat/lon inputs & trigger geocode ──────────────
+async function onLocationPicked(lat, lon) {
+  document.getElementById('id_shop_lat').value = lat.toFixed(6);
+  document.getElementById('id_shop_lon').value = lon.toFixed(6);
+  marker.setLatLng([lat, lon]);
+  updateFormula();
+  await reverseGeocode(lat, lon);
+}
+
+// Drag marker
+marker.on('dragend', function() {
+  const pos = marker.getLatLng();
+  onLocationPicked(pos.lat, pos.lng);
+});
+
+// Click on map
+map.on('click', function(e) {
+  map.setView(e.latlng, Math.max(map.getZoom(), 15));
+  onLocationPicked(e.latlng.lat, e.latlng.lng);
+});
+
+// Sync manual coordinate input → map
+['id_shop_lat', 'id_shop_lon'].forEach(id => {
+  document.getElementById(id).addEventListener('change', function() {
+    const lat = parseFloat(document.getElementById('id_shop_lat').value);
+    const lon = parseFloat(document.getElementById('id_shop_lon').value);
+    if (!isNaN(lat) && !isNaN(lon)) {
+      marker.setLatLng([lat, lon]);
+      map.setView([lat, lon], map.getZoom());
+      updateFormula();
+    }
+  });
+});
+
+// ── GPS detect ───────────────────────────────────────────
+function detectMyLocation() {
+  if (!navigator.geolocation) {
+    showStatus('statusError', "Brauzeringiz GPS ni qo'llab-quvvatlamaydi.");
+    return;
+  }
+  const btn = document.getElementById('gpsBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="material-icons-round" style="font-size:20px;animation:spin 1s linear infinite;">refresh</span> Aniqlanmoqda...';
+  showStatus('statusLoading');
+
+  navigator.geolocation.getCurrentPosition(
+    async function(pos) {
+      btn.disabled = false;
+      btn.innerHTML = '<span class="material-icons-round" style="font-size:22px;">my_location</span> Hozirgi joylashuvni do\'kon manzili sifatida aniqlash';
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+      map.setView([lat, lon], 16);
+      await onLocationPicked(lat, lon);
+    },
+    function(err) {
+      btn.disabled = false;
+      btn.innerHTML = '<span class="material-icons-round" style="font-size:22px;">my_location</span> Hozirgi joylashuvni do\'kon manzili sifatida aniqlash';
+      const msgs = {
+        1: "Joylashuvga ruxsat berilmadi. Brauzer sozlamalarida ruxsat bering.",
+        2: "Joylashuv aniqlanmadi. Internetni tekshiring.",
+        3: "Vaqt tugadi. Xaritada qo'lda belgilang.",
+      };
+      showStatus('statusError', msgs[err.code] || "Joylashuv aniqlanmadi.");
+    },
+    { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+  );
+}
+
+// ── Formula preview ──────────────────────────────────────
+function fmtNum(n) {
+  return parseInt(n || 0).toLocaleString('uz-UZ');
+}
+
+function updateFormula() {
+  const perKm = parseInt(document.getElementById('id_cost_per_km').value) || 0;
+  const minCost = parseInt(document.getElementById('id_min_delivery_cost').value) || 0;
+  document.getElementById('formulaText').innerHTML =
+    `Yetkazib berish = <strong>max(${fmtNum(minCost)} so'm, masofa × ${fmtNum(perKm)} so'm/km)</strong><br>` +
+    `Masalan: 5 km → max(${fmtNum(minCost)}, ${fmtNum(5 * perKm)}) = <strong>${fmtNum(Math.max(minCost, 5 * perKm))} so'm</strong>`;
+}
+
+document.getElementById('id_cost_per_km').addEventListener('input', updateFormula);
+document.getElementById('id_min_delivery_cost').addEventListener('input', updateFormula);
+updateFormula();
+</script>
+
+{% endblock %}

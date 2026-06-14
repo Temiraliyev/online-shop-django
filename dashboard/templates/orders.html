@@ -1,6 +1,17 @@
 {% extends "dashboard.html" %}
 {% block content %}
 
+<style>
+.status-chip { display:inline-flex; align-items:center; gap:4px; border-radius:50px; padding:3px 10px; font-size:.73rem; font-weight:700; }
+.chip-pending { background:#f1f5f9; color:#475569; }
+.chip-processing { background:#fef3c7; color:#92400e; }
+.chip-shipping { background:#dbeafe; color:#1e40af; }
+.chip-delivered { background:#d1fae5; color:#065f46; }
+.chip-cancelled { background:#fee2e2; color:#991b1b; }
+.chip-paid { background:#d1fae5; color:#065f46; }
+.chip-cash { background:#fef9c3; color:#854d0e; }
+</style>
+
 {% if orders %}
 <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;overflow:hidden;">
   <table class="table dash-table mb-0">
@@ -8,8 +19,10 @@
       <tr>
         <th>#</th>
         <th>Foydalanuvchi</th>
-        <th>Buyurtma ID</th>
-        <th>Jami summa</th>
+        <th>Telefon</th>
+        <th>Manzil</th>
+        <th>Jami</th>
+        <th>To'lov</th>
         <th>Holat</th>
         <th></th>
       </tr>
@@ -17,15 +30,38 @@
     <tbody>
       {% for order in orders %}
       <tr>
-        <td style="color:#94a3b8;">{{ forloop.counter }}</td>
-        <td style="font-weight:600;">{{ order.user.full_name }}</td>
-        <td style="color:#64748b;font-size:.82rem;">#{{ order.id }}</td>
-        <td style="color:#6366f1;font-weight:700;">{{ order.get_total_price|floatformat:0 }} so'm</td>
+        <td style="color:#94a3b8;font-size:.82rem;">#{{ order.id }}</td>
+        <td style="font-weight:600;">{{ order.full_name|default:order.user.full_name }}</td>
+        <td style="color:#64748b;font-size:.82rem;">{{ order.phone|default:"—" }}</td>
+        <td style="font-size:.8rem;color:#64748b;max-width:180px;">
+          {% if order.address_label %}
+          <span style="display:inline-flex;align-items:center;gap:3px;background:#ede9fe;color:#6366f1;padding:1px 7px;border-radius:50px;font-size:.72rem;font-weight:700;margin-bottom:2px;">
+            <span class="material-icons-round" style="font-size:11px;">location_on</span>{{ order.address_label }}
+          </span><br>
+          {% endif %}
+          {% if order.address %}{{ order.address|truncatechars:50 }}{% else %}—{% endif %}
+        </td>
+        <td style="color:#6366f1;font-weight:700;white-space:nowrap;">{{ order.get_grand_total|floatformat:0 }} so'm</td>
         <td>
-          {% if order.status %}
-            <span style="background:#d1fae5;color:#065f46;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">Muvaffaqiyatli</span>
+          {% if order.payment_status == 'paid' %}
+          <span class="status-chip chip-paid"><span class="material-icons-round" style="font-size:11px;">check</span> To'landi</span>
+          {% elif order.payment_method == 'cash' %}
+          <span class="status-chip chip-cash"><span class="material-icons-round" style="font-size:11px;">payments</span> Naqd</span>
           {% else %}
-            <span style="background:#fee2e2;color:#991b1b;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">Bekor qilingan</span>
+          <span class="status-chip chip-pending"><span class="material-icons-round" style="font-size:11px;">credit_card</span> Karta</span>
+          {% endif %}
+        </td>
+        <td>
+          {% if order.delivery_status == 'pending' %}
+          <span class="status-chip chip-pending"><span class="material-icons-round" style="font-size:11px;">schedule</span> Kutilmoqda</span>
+          {% elif order.delivery_status == 'processing' %}
+          <span class="status-chip chip-processing"><span class="material-icons-round" style="font-size:11px;">inventory_2</span> Tayyorlanmoqda</span>
+          {% elif order.delivery_status == 'shipping' %}
+          <span class="status-chip chip-shipping"><span class="material-icons-round" style="font-size:11px;">local_shipping</span> Yetkazilmoqda</span>
+          {% elif order.delivery_status == 'delivered' %}
+          <span class="status-chip chip-delivered"><span class="material-icons-round" style="font-size:11px;">check_circle</span> Yetkazildi</span>
+          {% elif order.delivery_status == 'cancelled' %}
+          <span class="status-chip chip-cancelled"><span class="material-icons-round" style="font-size:11px;">cancel</span> Bekor qilindi</span>
           {% endif %}
         </td>
         <td>

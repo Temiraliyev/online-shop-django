@@ -30,8 +30,11 @@ class Cart:
         if product_id not in self.cart:
             self.cart[product_id] = {'quantity': 0, 'price': str(product.price)}
 
-        self.cart.get(product_id)['quantity'] += quantity
+        current_qty = self.cart[product_id]['quantity']
+        new_qty = current_qty + quantity
+        self.cart[product_id]['quantity'] = min(new_qty, product.stock)
         self.save()
+        return self.cart[product_id]['quantity']
 
     def remove(self, product):
         product_id = str(product.id)

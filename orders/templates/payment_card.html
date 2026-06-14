@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.pay-wrap { max-width: 860px; margin: 0 auto; }
+.pay-card { background:#fff; border-radius:20px; border:1px solid #e2e8f0; overflow:hidden; box-shadow:0 4px 24px rgba(99,102,241,.08); }
+.form-label { font-size:.85rem; font-weight:600; color:#475569; margin-bottom:5px; }
+.form-control { border-radius:10px; border:1.5px solid #e2e8f0; padding:11px 14px; font-size:.9rem; transition:border-color .2s, box-shadow .2s; }
+.form-control:focus { border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,.12); outline:none; }
+.errorlist { color:#ef4444; font-size:.8rem; list-style:none; padding:0; margin:4px 0 0; }
+
+.card-preview {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #7c3aed 100%);
+  border-radius: 18px;
+  padding: 28px 28px 24px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1.586;
+  max-width: 360px;
+  margin: 0 auto 28px;
+  box-shadow: 0 20px 60px rgba(99,102,241,.4);
+  transition: background .4s;
+}
+.card-preview::before {
+  content: '';
+  position: absolute; top: -60px; right: -60px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.08);
+}
+.card-preview::after {
+  content: '';
+  position: absolute; bottom: -40px; left: -40px;
+  width: 160px; height: 160px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.06);
+}
+.card-chip { width:44px; height:34px; background:linear-gradient(135deg,#fbbf24,#f59e0b); border-radius:6px; margin-bottom:20px; display:flex; align-items:center; justify-content:center; }
+.card-number-display { font-size:1.25rem; letter-spacing:.18em; font-weight:600; margin-bottom:22px; font-family:monospace; }
+.card-bottom { display:flex; justify-content:space-between; align-items:flex-end; }
+.card-label { font-size:.65rem; text-transform:uppercase; letter-spacing:.08em; opacity:.7; margin-bottom:2px; }
+.card-value { font-size:.9rem; font-weight:600; letter-spacing:.04em; }
+.card-logo { font-size:.7rem; font-weight:800; letter-spacing:.1em; text-align:right; }
+.card-type-badge { display:inline-flex; align-items:center; gap:6px; font-size:.8rem; font-weight:700; padding:4px 12px; border-radius:50px; margin-bottom:12px; }
+
+.security-badges { display:flex; gap:12px; justify-content:center; margin-top:16px; flex-wrap:wrap; }
+.security-badge { display:inline-flex; align-items:center; gap:5px; font-size:.75rem; color:#64748b; }
+.security-badge .material-icons-round { font-size:14px; color:#10b981; }
+
+.step-indicator { display:flex; align-items:center; gap:0; margin-bottom:28px; }
+.step { display:flex; align-items:center; gap:8px; font-size:.8rem; font-weight:600; }
+.step-num { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.8rem; font-weight:700; }
+.step-line { flex:1; height:2px; background:#e2e8f0; margin:0 8px; }
+.step.done .step-num { background:#10b981; color:#fff; }
+.step.done .step-label { color:#10b981; }
+.step.active .step-num { background:#6366f1; color:#fff; }
+.step.active .step-label { color:#6366f1; }
+.step .step-num { background:#e2e8f0; color:#94a3b8; }
+.step .step-label { color:#94a3b8; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+<div class="pay-wrap">
+
+  <!-- Steps -->
+  <div class="step-indicator">
+    <div class="step done">
+      <div class="step-num"><span class="material-icons-round" style="font-size:14px;">check</span></div>
+      <div class="step-label">Ma'lumotlar</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step active">
+      <div class="step-num">2</div>
+      <div class="step-label">To'lov</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-label">Tasdiqlash</div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Card form -->
+    <div class="col-lg-7">
+      <div class="pay-card">
+        <div style="padding:24px 28px;border-bottom:1px solid #e2e8f0;background:linear-gradient(135deg,#6366f1,#4f46e5);">
+          <h2 style="color:#fff;font-size:1.2rem;font-weight:800;margin:0 0 4px;display:flex;align-items:center;gap:8px;">
+            <span class="material-icons-round">credit_card</span>
+            Karta orqali to'lov
+          </h2>
+          <p style="color:rgba(255,255,255,.75);margin:0;font-size:.85rem;">Karta ma'lumotlarini kiriting</p>
+        </div>
+        <div style="padding:28px;">
+
+          <!-- Card type indicator -->
+          <div id="cardTypeBadge" style="display:none;margin-bottom:8px;">
+            <span id="cardTypeBadgeInner" class="card-type-badge"></span>
+          </div>
+
+          <!-- Visual card preview -->
+          <div class="card-preview" id="cardPreview">
+            <div class="card-chip">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;width:28px;">
+                <div style="height:10px;background:rgba(0,0,0,.2);border-radius:2px;"></div>
+                <div style="height:10px;background:rgba(255,255,255,.3);border-radius:2px;"></div>
+                <div style="height:10px;background:rgba(255,255,255,.3);border-radius:2px;"></div>
+                <div style="height:10px;background:rgba(0,0,0,.2);border-radius:2px;"></div>
+              </div>
+            </div>
+            <div class="card-number-display" id="cardNumDisplay">•••• •••• •••• ••••</div>
+            <div class="card-bottom">
+              <div>
+                <div class="card-label">Muddat</div>
+                <div class="card-value" id="cardExpiryDisplay">MM/YY</div>
+              </div>
+              <div class="card-logo" id="cardLogoDisplay">
+                <span class="material-icons-round" style="font-size:28px;opacity:.6;">credit_card</span>
+              </div>
+            </div>
+          </div>
+
+          <form method="POST" id="paymentForm">
+            {% csrf_token %}
+
+            <!-- Card number -->
+            <div class="mb-3">
+              <label class="form-label">Karta raqami *</label>
+              <div style="position:relative;">
+                <span class="material-icons-round" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:20px;">credit_card</span>
+                <input type="text" name="card_number" id="id_card_number"
+                       class="form-control{% if form.card_number.errors %} is-invalid{% endif %}"
+                       style="padding-left:42px;" placeholder="0000 0000 0000 0000"
+                       maxlength="19" inputmode="numeric" autocomplete="cc-number"
+                       value="{{ form.card_number.value|default:'' }}">
+              </div>
+              {% if form.card_number.errors %}<ul class="errorlist">{% for e in form.card_number.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+
+            <!-- Expiry + CVV (CVV only for VISA) -->
+            <div class="row g-3 mb-4">
+              <div class="col-6">
+                <label class="form-label">Amal qilish muddati *</label>
+                <input type="text" name="expiry" id="id_expiry"
+                       class="form-control{% if form.expiry.errors %} is-invalid{% endif %}"
+                       placeholder="MM/YY" maxlength="5" inputmode="numeric" autocomplete="cc-exp"
+                       value="{{ form.expiry.value|default:'' }}">
+                {% if form.expiry.errors %}<ul class="errorlist">{% for e in form.expiry.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+              </div>
+
+              <div class="col-6" id="cvvSection" style="display:none;">
+                <label class="form-label">CVV *</label>
+                <div style="position:relative;">
+                  <input type="password" name="cvv" id="id_cvv"
+                         class="form-control{% if form.cvv.errors %} is-invalid{% endif %}"
+                         placeholder="•••" maxlength="4" inputmode="numeric" autocomplete="cc-csc"
+                         value="{{ form.cvv.value|default:'' }}">
+                  <button type="button" onclick="toggleCvv()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#94a3b8;">
+                    <span class="material-icons-round" id="cvvToggleIcon" style="font-size:18px;">visibility_off</span>
+                  </button>
+                </div>
+                {% if form.cvv.errors %}<ul class="errorlist">{% for e in form.cvv.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+              </div>
+            </div>
+
+            <!-- Amount -->
+            <div style="background:#f8fafc;border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;">
+              <div>
+                <div style="font-size:.8rem;color:#64748b;margin-bottom:2px;">Jami to'lov miqdori</div>
+                <div style="font-size:1.4rem;font-weight:800;color:#6366f1;">{{ order.get_grand_total|floatformat:0 }} so'm</div>
+              </div>
+              <div style="text-align:right;font-size:.8rem;color:#94a3b8;">
+                Mahsulotlar: {{ order.get_total_price|floatformat:0 }} so'm<br>
+                Yetkazib berish: {{ order.delivery_cost|floatformat:0 }} so'm
+              </div>
+            </div>
+
+            <div id="processingOverlay" style="display:none;text-align:center;padding:20px 0;">
+              <div style="width:48px;height:48px;border:4px solid #e2e8f0;border-top-color:#6366f1;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px;"></div>
+              <div style="font-weight:700;color:#0f172a;margin-bottom:4px;">To'lov amalga oshirilmoqda...</div>
+              <div style="font-size:.85rem;color:#64748b;">Iltimos, sahifani yopmang</div>
+            </div>
+
+            <button type="submit" class="btn-primary-custom" id="payBtn" style="width:100%;justify-content:center;font-size:1rem;padding:15px;border-radius:12px;">
+              <span class="material-icons-round" style="font-size:20px;">lock</span>
+              {{ order.get_grand_total|floatformat:0 }} so'm to'lash
+            </button>
+
+            <div class="security-badges mt-3">
+              <div class="security-badge"><span class="material-icons-round">shield</span> SSL shifrlash</div>
+              <div class="security-badge"><span class="material-icons-round">verified_user</span> 3D Secure</div>
+              <div class="security-badge"><span class="material-icons-round">lock</span> Xavfsiz to'lov</div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order summary -->
+    <div class="col-lg-5">
+      <div class="pay-card">
+        <div style="padding:20px 24px;border-bottom:1px solid #e2e8f0;background:#f8fafc;">
+          <div style="font-weight:700;font-size:.95rem;color:#0f172a;display:flex;align-items:center;gap:8px;">
+            <span class="material-icons-round" style="color:#6366f1;font-size:20px;">receipt</span>
+            Buyurtma #{{ order.id }}
+          </div>
+        </div>
+        <div style="padding:20px 24px;">
+          {% for item in order.items.all %}
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;{% if not forloop.last %}border-bottom:1px solid #f1f5f9;{% endif %}">
+            <div>
+              <div style="font-weight:600;font-size:.875rem;">{{ item.product.title }}</div>
+              <div style="font-size:.8rem;color:#94a3b8;">{{ item.quantity }} dona</div>
+            </div>
+            <div style="font-weight:700;font-size:.875rem;color:#6366f1;">{{ item.get_cost|floatformat:0 }} so'm</div>
+          </div>
+          {% endfor %}
+
+          <div style="margin-top:16px;padding-top:12px;border-top:1px solid #e2e8f0;">
+            <div style="display:flex;justify-content:space-between;font-size:.85rem;color:#64748b;margin-bottom:8px;">
+              <span>Mahsulotlar</span><span>{{ order.get_total_price|floatformat:0 }} so'm</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:.85rem;color:#64748b;margin-bottom:12px;">
+              <span>Yetkazib berish</span><span>{{ order.delivery_cost|floatformat:0 }} so'm</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-weight:800;font-size:1rem;">
+              <span>Jami</span><span style="color:#6366f1;">{{ order.get_grand_total|floatformat:0 }} so'm</span>
+            </div>
+          </div>
+
+          <div style="margin-top:16px;padding:12px 14px;background:#f0fdf4;border-radius:10px;font-size:.8rem;color:#166534;">
+            <div style="font-weight:600;margin-bottom:4px;">Yetkazib berish manzili:</div>
+            {{ order.full_name }}<br>
+            {{ order.phone }}<br>
+            {{ order.address }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const CARD_CONFIGS = {
+  visa:    { label: 'VISA',   bg: 'linear-gradient(135deg,#1a1f71,#0057a8)', logo: '<span style="font-weight:900;font-size:1.2rem;font-style:italic;letter-spacing:.05em;">VISA</span>', badge: '#1a1f71', cvv: true },
+  humo:    { label: 'HUMO',   bg: 'linear-gradient(135deg,#1e7e34,#28a745)', logo: '<span style="font-weight:900;font-size:1rem;">HUMO</span>',   badge: '#1e7e34', cvv: false },
+  uzcard:  { label: 'UzCard', bg: 'linear-gradient(135deg,#b91c1c,#ef4444)', logo: '<span style="font-weight:900;font-size:.9rem;">UzCard</span>', badge: '#b91c1c', cvv: false },
+  unknown: { label: '',       bg: 'linear-gradient(135deg,#6366f1,#4f46e5,#7c3aed)', logo: '<span class="material-icons-round" style="font-size:28px;opacity:.6;">credit_card</span>', badge: '', cvv: false },
+};
+
+function detectType(val) {
+  if (val.startsWith('9860')) return 'humo';
+  if (val.startsWith('8600')) return 'uzcard';
+  if (val.startsWith('4'))    return 'visa';
+  return 'unknown';
+}
+
+function applyCardType(val) {
+  const type = val.length >= 1 ? detectType(val) : 'unknown';
+  const cfg = CARD_CONFIGS[type];
+
+  document.getElementById('cardPreview').style.background = cfg.bg;
+  document.getElementById('cardLogoDisplay').innerHTML = cfg.logo;
+
+  const badge = document.getElementById('cardTypeBadge');
+  const badgeInner = document.getElementById('cardTypeBadgeInner');
+  if (cfg.label) {
+    badgeInner.textContent = cfg.label;
+    badgeInner.style.background = cfg.badge + '22';
+    badgeInner.style.color = cfg.badge;
+    badge.style.display = 'block';
+  } else {
+    badge.style.display = 'none';
+  }
+
+  const cvvSection = document.getElementById('cvvSection');
+  cvvSection.style.display = cfg.cvv ? 'block' : 'none';
+  if (!cfg.cvv) {
+    document.getElementById('id_cvv').value = '';
+  }
+}
+
+// Card number input
+document.getElementById('id_card_number').addEventListener('input', function() {
+  let val = this.value.replace(/\D/g, '').slice(0, 16);
+  this.value = val.match(/.{1,4}/g)?.join(' ') || val;
+
+  let display = val.padEnd(16, '•');
+  document.getElementById('cardNumDisplay').textContent =
+    display.match(/.{1,4}/g)?.join(' ') || display;
+
+  applyCardType(val);
+});
+
+// Expiry input
+document.getElementById('id_expiry').addEventListener('input', function() {
+  let val = this.value.replace(/\D/g, '').slice(0, 4);
+  if (val.length >= 3) val = val.slice(0, 2) + '/' + val.slice(2);
+  this.value = val;
+  document.getElementById('cardExpiryDisplay').textContent = this.value || 'MM/YY';
+});
+
+// CVV toggle visibility
+function toggleCvv() {
+  const cvv = document.getElementById('id_cvv');
+  const icon = document.getElementById('cvvToggleIcon');
+  cvv.type = cvv.type === 'password' ? 'text' : 'password';
+  icon.textContent = cvv.type === 'password' ? 'visibility_off' : 'visibility';
+}
+
+// Processing animation
+document.getElementById('paymentForm').addEventListener('submit', function() {
+  document.getElementById('payBtn').style.display = 'none';
+  document.getElementById('processingOverlay').style.display = 'block';
+});
+
+// Restore state on page reload (after form error)
+(function() {
+  const numInput = document.getElementById('id_card_number');
+  if (numInput.value) {
+    const val = numInput.value.replace(/\D/g, '');
+    document.getElementById('cardNumDisplay').textContent =
+      val.padEnd(16, '•').match(/.{1,4}/g)?.join(' ') || val;
+    applyCardType(val);
+  }
+  const expInput = document.getElementById('id_expiry');
+  if (expInput.value) {
+    document.getElementById('cardExpiryDisplay').textContent = expInput.value;
+  }
+  // If VISA had CVV error, keep cvvSection visible
+  {% if form.cvv.errors %}
+  document.getElementById('cvvSection').style.display = 'block';
+  {% endif %}
+})();
+</script>
+
+{% endblock %}

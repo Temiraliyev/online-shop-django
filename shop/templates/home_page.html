@@ -1,20 +1,49 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<!-- Hero Banner -->
-{% if not request.GET.q and not request.resolver_match.url_name == 'filter_by_category' %}
-<div style="background:linear-gradient(135deg,#6366f1 0%,#4f46e5 60%,#7c3aed 100%);border-radius:24px;padding:56px 48px;margin-bottom:40px;position:relative;overflow:hidden;">
-  <div style="position:absolute;top:-40px;right:-40px;width:260px;height:260px;background:rgba(255,255,255,.07);border-radius:50%;"></div>
-  <div style="position:absolute;bottom:-60px;right:80px;width:180px;height:180px;background:rgba(255,255,255,.05);border-radius:50%;"></div>
+<!-- Hero Banner (only on main page without search/filter) -->
+{% if not query and not request.GET.q %}
+<div
+  style="background:linear-gradient(135deg,#6366f1 0%,#4f46e5 60%,#7c3aed 100%);border-radius:24px;padding:56px 48px;margin-bottom:40px;position:relative;overflow:hidden;">
+  <div
+    style="position:absolute;top:-40px;right:-40px;width:260px;height:260px;background:rgba(255,255,255,.07);border-radius:50%;">
+  </div>
+  <div
+    style="position:absolute;bottom:-60px;right:80px;width:180px;height:180px;background:rgba(255,255,255,.05);border-radius:50%;">
+  </div>
   <div style="position:relative;z-index:1;max-width:560px;">
-    <span style="background:rgba(255,255,255,.15);color:#fff;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 14px;border-radius:50px;display:inline-block;margin-bottom:14px;">Yangi kolleksiya</span>
-    <h1 style="font-size:2.6rem;font-weight:800;color:#fff;line-height:1.15;margin:0 0 16px;">Eng yaxshi<br>mahsulotlar sizda</h1>
-    <p style="color:rgba(255,255,255,.8);font-size:1rem;margin:0 0 28px;line-height:1.6;">Minglab mahsulotlar orasidan o'zingizga mosini toping. Tez yetkazib berish kafolatlangan.</p>
-    <a href="{% url 'shop:home_page' %}" style="background:#fff;color:#4f46e5;font-weight:700;font-size:.95rem;padding:12px 28px;border-radius:50px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
+    <span
+      style="background:rgba(255,255,255,.15);color:#fff;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:4px 14px;border-radius:50px;display:inline-block;margin-bottom:14px;">Yangi
+      kolleksiya</span>
+    <h1 style="font-size:2.6rem;font-weight:800;color:#fff;line-height:1.15;margin:0 0 16px;">Eng yaxshi<br>mahsulotlar
+      bizda</h1>
+    <p style="color:rgba(255,255,255,.8);font-size:1rem;margin:0 0 28px;line-height:1.6;">Minglab mahsulotlar orasidan
+      o'zingizga mosini toping. Tez yetkazib berish kafolatlangan.</p>
+    <a href="{% url 'shop:home_page' %}"
+      style="background:#fff;color:#4f46e5;font-weight:700;font-size:.95rem;padding:12px 28px;border-radius:50px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
       <span class="material-icons-round" style="font-size:18px;">explore</span>
       Mahsulotlarni ko'rish
     </a>
   </div>
+</div>
+{% endif %}
+
+<!-- Search results header -->
+{% if query %}
+<div style="margin-bottom:28px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+  <h2 style="font-size:1.2rem;font-weight:800;color:#0f172a;margin:0;">
+    <span class="material-icons-round" style="vertical-align:middle;color:#6366f1;margin-right:4px;">search</span>
+    "{{ query }}" bo'yicha natijalar
+  </h2>
+  {% if products %}
+  <span
+    style="background:#e0e7ff;color:#4f46e5;font-size:.78rem;font-weight:700;padding:3px 12px;border-radius:50px;">{{
+    products.paginator.count }} ta topildi</span>
+  {% endif %}
+  <a href="{% url 'shop:home_page' %}"
+    style="font-size:.82rem;color:#64748b;text-decoration:none;display:flex;align-items:center;gap:3px;">
+    <span class="material-icons-round" style="font-size:16px;">close</span> Tozalash
+  </a>
 </div>
 {% endif %}
 
@@ -24,14 +53,31 @@
 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px;">
   {% for product in products.object_list %}
   <div class="product-card">
-    <a href="{{ product.get_absolute_url }}" style="display:block;text-decoration:none;">
+    <a href="{{ product.get_absolute_url }}" style="display:block;text-decoration:none;position:relative;">
       <img class="product-card-img" src="{{ product.image.url }}" alt="{{ product.title }}">
+      {% if product.stock == 0 %}
+      <span
+        style="position:absolute;top:8px;right:8px;background:#ef4444;color:#fff;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:50px;">Tugadi</span>
+      {% elif product.stock <= 5 %} <span
+        style="position:absolute;top:8px;right:8px;background:#f97316;color:#fff;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:50px;">
+        {{ product.stock }} ta qoldi</span>
+        {% endif %}
     </a>
     <div class="product-card-body">
       <a href="{{ product.get_absolute_url }}" style="text-decoration:none;">
         <h3 class="product-card-title">{{ product.title }}</h3>
       </a>
-      <p class="product-card-price mt-2 mb-3">
+      <!-- Rating -->
+      {% if product.avg_rating %}
+      <div style="display:flex;align-items:center;gap:4px;margin:4px 0 6px;">
+        <span class="material-icons-round" style="font-size:15px;color:#f59e0b;">star</span>
+        <span style="font-size:.78rem;font-weight:700;color:#374151;">{{ product.avg_rating }}</span>
+        <span style="font-size:.74rem;color:#94a3b8;">({{ product.reviews_count }})</span>
+      </div>
+      {% else %}
+      <div style="height:22px;margin:4px 0 6px;"></div>
+      {% endif %}
+      <p class="product-card-price mt-1 mb-3">
         {{ product.price|floatformat:0 }} <small>so'm</small>
       </p>
       <a href="{{ product.get_absolute_url }}" class="btn-card btn-card-primary">
@@ -48,38 +94,41 @@
   <ul class="pagination" style="gap:6px;">
     {% if products.has_previous %}
     <li class="page-item">
-      <a class="page-link" href="?page={{ products.previous_page_number }}" style="border-radius:10px;border-color:#e2e8f0;color:#6366f1;">
+      <a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}page={{ products.previous_page_number }}"
+        style="border-radius:10px;border-color:#e2e8f0;color:#6366f1;">
         <span class="material-icons-round" style="font-size:18px;vertical-align:middle;">chevron_left</span>
       </a>
     </li>
     {% endif %}
     {% for num in products.paginator.page_range %}
-      {% if products.number == num %}
-      <li class="page-item active">
-        <a class="page-link" href="?page={{ num }}" style="border-radius:10px;background:#6366f1;border-color:#6366f1;">{{ num }}</a>
-      </li>
-      {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
-      <li class="page-item">
-        <a class="page-link" href="?page={{ num }}" style="border-radius:10px;border-color:#e2e8f0;color:#6366f1;">{{ num }}</a>
+    {% if products.number == num %}
+    <li class="page-item active">
+      <a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}page={{ num }}"
+        style="border-radius:10px;background:#6366f1;border-color:#6366f1;">{{ num }}</a>
+    </li>
+    {% elif num > products.number|add:'-3' and num < products.number|add:'3' %} <li class="page-item">
+      <a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}page={{ num }}"
+        style="border-radius:10px;border-color:#e2e8f0;color:#6366f1;">{{ num }}</a>
       </li>
       {% endif %}
-    {% endfor %}
-    {% if products.has_next %}
-    <li class="page-item">
-      <a class="page-link" href="?page={{ products.next_page_number }}" style="border-radius:10px;border-color:#e2e8f0;color:#6366f1;">
-        <span class="material-icons-round" style="font-size:18px;vertical-align:middle;">chevron_right</span>
-      </a>
-    </li>
-    {% endif %}
+      {% endfor %}
+      {% if products.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}page={{ products.next_page_number }}"
+          style="border-radius:10px;border-color:#e2e8f0;color:#6366f1;">
+          <span class="material-icons-round" style="font-size:18px;vertical-align:middle;">chevron_right</span>
+        </a>
+      </li>
+      {% endif %}
   </ul>
 </nav>
 {% endif %}
 
 {% else %}
 <div class="empty-state">
-  <div class="empty-state-icon"><span class="material-icons-round">inventory_2</span></div>
-  <h4>Mahsulotlar topilmadi</h4>
-  <p>Hozircha do'konda mahsulotlar yo'q yoki qidiruv natijasi bo'sh.</p>
+  <div class="empty-state-icon"><span class="material-icons-round">{% if query %}search_off{% else %}inventory_2{% endif %}</span></div>
+  <h4>{% if query %}"{{ query }}" bo'yicha hech narsa topilmadi{% else %}Mahsulotlar topilmadi{% endif %}</h4>
+  <p>{% if query %}Boshqa so'z bilan qidiring yoki do'konimizni ko'ring.{% else %}Hozircha do'konda mahsulotlar yo'q.{% endif %}</p>
   <a href="{% url 'shop:home_page' %}" class="btn-primary-custom" style="display:inline-flex;">
     <span class="material-icons-round" style="font-size:18px;">arrow_back</span>
     Barcha mahsulotlar

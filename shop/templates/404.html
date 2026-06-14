@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="text-align:center;padding:80px 20px;">
+  <div style="
+    width:120px;height:120px;
+    background:linear-gradient(135deg,#e0e7ff,#c7d2fe);
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto 28px;
+  ">
+    <span class="material-icons-round" style="font-size:56px;color:#6366f1;">search_off</span>
+  </div>
+
+  <h1 style="font-size:6rem;font-weight:800;color:#6366f1;line-height:1;margin-bottom:8px;">404</h1>
+  <h2 style="font-size:1.5rem;font-weight:700;color:#0f172a;margin-bottom:12px;">Sahifa topilmadi</h2>
+  <p style="color:#64748b;font-size:1rem;max-width:440px;margin:0 auto 32px;line-height:1.6;">
+    Siz qidirayotgan sahifa mavjud emas yoki boshqa manzilga ko'chirilgan bo'lishi mumkin.
+  </p>
+
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+    <a href="/" class="btn-primary-custom">
+      <span class="material-icons-round" style="font-size:18px;">home</span>
+      Bosh sahifaga qaytish
+    </a>
+    <a href="javascript:history.back()" class="btn-outline-custom">
+      <span class="material-icons-round" style="font-size:18px;">arrow_back</span>
+      Orqaga
+    </a>
+  </div>
+</div>
+{% endblock %}

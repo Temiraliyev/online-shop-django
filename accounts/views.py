@@ -1,9 +1,14 @@
+import json
+
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 from .forms import UserRegistrationForm, UserLoginForm, ManagerLoginForm, EditProfileForm
-from accounts.models import User
+from accounts.models import User, SavedAddress
 
 
 def create_manager():
@@ -84,13 +89,54 @@ def user_logout(request):
     return redirect('accounts:user_login')
 
 
+@login_required
 def edit_profile(request):
-    form = EditProfileForm(request.POST, instance=request.user)
-    if form.is_valid():
-        form.save()
-        messages.success(request, 'Your profile has been updated', 'success')
-        return redirect('accounts:edit_profile')
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your profile has been updated', 'success')
+            return redirect('accounts:edit_profile')
     else:
         form = EditProfileForm(instance=request.user)
-    context = {'title':'Edit Profile', 'form':form}
+    context = {'title': 'Edit Profile', 'form': form}
     return render(request, 'edit_profile.html', context)
+
+
+@login_required
+@require_POST
+def save_address(request):
+    try:
+        data = json.loads(request.body)
+        label = data.get('label', '').strip()
+        full_address = data.get('full_address', '').strip()
+        lat = data.get('lat')
+        lon = data.get('lon')
+        if not label or not full_address:
+            return JsonResponse({'ok': False, 'error': 'Label va manzil kiritilishi shart'})
+        addr = SavedAddress.objects.create(
+            user=request.user,
+            label=label,
+            full_address=full_address,
+            lat=lat,
+            lon=lon,
+        )
+        return JsonResponse({'ok': True, 'id': addr.id, 'label': addr.label})
+    except Exception as e:
+        return JsonResponse({'ok': False, 'error': str(e)})
+
+
+@login_required
+def delete_address(request, pk):
+    SavedAddress.objects.filter(pk=pk, user=request.user).delete()
+    return JsonResponse({'ok': True})
+
+
+@login_required
+def my_addresses(request):
+    addresses = request.user.saved_addresses.all()
+    context = {
+        'title': 'Manzillarim',
+        'addresses': addresses,
+    }
+    return render(request, 'my_addresses.html', context)

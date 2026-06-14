@@ -3,12 +3,13 @@ from django.forms import ModelForm
 
 from shop.models import Product, Category
 from accounts.models import User
+from orders.models import ShopSettings
 
 
 class AddProductForm(ModelForm):
     class Meta:
         model = Product
-        fields = ['category', 'image', 'title','description', 'price']
+        fields = ['category', 'image', 'title', 'description', 'price', 'stock']
 
     def __init__(self, *args, **kwargs):
         super(AddProductForm, self).__init__(*args, **kwargs)
@@ -32,7 +33,7 @@ class AddCategoryForm(ModelForm):
 class EditProductForm(ModelForm):
     class Meta:
         model = Product
-        fields = ['category', 'image', 'title','description', 'price']
+        fields = ['category', 'image', 'title', 'description', 'price', 'stock']
 
     def __init__(self, *args, **kwargs):
         super(EditProductForm, self).__init__(*args, **kwargs)
@@ -50,3 +51,23 @@ class AddManagerForm(forms.Form):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError('Bu email allaqachon ro\'yxatdan o\'tgan.')
         return email
+
+
+class ShopSettingsForm(ModelForm):
+    class Meta:
+        model = ShopSettings
+        fields = ['shop_address', 'shop_lat', 'shop_lon', 'cost_per_km', 'min_delivery_cost']
+        widgets = {
+            'shop_address': forms.TextInput(attrs={'class': 'form-control', 'placeholder': "Do'kon to'liq manzili"}),
+            'shop_lat': forms.NumberInput(attrs={'class': 'form-control', 'step': 'any', 'id': 'id_shop_lat'}),
+            'shop_lon': forms.NumberInput(attrs={'class': 'form-control', 'step': 'any', 'id': 'id_shop_lon'}),
+            'cost_per_km': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),
+            'min_delivery_cost': forms.NumberInput(attrs={'class': 'form-control', 'min': 0}),
+        }
+        labels = {
+            'shop_address': "Do'kon manzili (matn)",
+            'shop_lat': 'Kenglik (Latitude)',
+            'shop_lon': "Uzunlik (Longitude)",
+            'cost_per_km': '1 km uchun narx (so\'m)',
+            'min_delivery_cost': 'Minimal yetkazib berish narxi (so\'m)',
+        }

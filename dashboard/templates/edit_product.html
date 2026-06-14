@@ -1,7 +1,7 @@
 {% extends "dashboard.html" %}
 {% block content %}
 
-<div style="max-width:580px;">
+<div style="max-width:620px;">
   <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;overflow:hidden;">
     <div style="padding:20px 28px;border-bottom:1px solid #e2e8f0;background:#f8fafc;">
       <h3 style="font-size:.85rem;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin:0;">Mahsulot ma'lumotlarini tahrirlash</h3>
@@ -10,7 +10,41 @@
       <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form }}
-        <div style="display:flex;gap:10px;margin-top:20px;">
+
+        <!-- Existing gallery -->
+        {% if gallery %}
+        <div style="margin-top:24px;">
+          <label style="display:block;font-size:.85rem;font-weight:600;color:#374151;margin-bottom:10px;">
+            <span class="material-icons-round" style="font-size:16px;vertical-align:middle;color:#6366f1;">photo_library</span>
+            Mavjud gallery rasmlari
+          </label>
+          <div style="display:flex;flex-wrap:wrap;gap:10px;">
+            {% for img in gallery %}
+            <div style="position:relative;">
+              <img src="{{ img.image.url }}" style="width:80px;height:80px;object-fit:cover;border-radius:10px;border:1px solid #e2e8f0;">
+              <a href="{% url 'dashboard:delete_gallery_image' img.id %}"
+                 style="position:absolute;top:-6px;right:-6px;width:22px;height:22px;background:#ef4444;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;"
+                 onclick="return confirm('Rasmni o\'chirishni tasdiqlaysizmi?')">
+                <span class="material-icons-round" style="font-size:13px;color:#fff;">close</span>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Add more gallery images -->
+        <div style="margin-top:20px;">
+          <label style="display:block;font-size:.85rem;font-weight:600;color:#374151;margin-bottom:8px;">
+            <span class="material-icons-round" style="font-size:16px;vertical-align:middle;color:#6366f1;">add_photo_alternate</span>
+            Yangi rasmlar qo'shish
+          </label>
+          <input type="file" name="gallery_images" multiple accept="image/*" class="form-control"
+                 style="font-size:.85rem;">
+          <p style="font-size:.75rem;color:#94a3b8;margin-top:6px;">Bir nechta rasm tanlash uchun Ctrl yoki Shift tugmasini bosib tanlang</p>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:24px;">
           <button class="btn-dash-primary" type="submit" style="padding:11px 24px;font-size:.9rem;">
             <span class="material-icons-round" style="font-size:18px;">save</span> Saqlash
           </button>
