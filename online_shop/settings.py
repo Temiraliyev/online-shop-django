@@ -11,6 +11,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-fallback-for-local-on
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'online-shop-django-production-b8bc.up.railway.app').split(',')
+CSRF_TRUSTED_ORIGINS = [
+    'https://online-shop-django-production-b8bc.up.railway.app',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
