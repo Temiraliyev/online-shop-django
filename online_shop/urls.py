@@ -3,8 +3,7 @@ from django.urls import path, include, re_path
 from django.conf import settings
 from django.views.static import serve
 
-from accounts.views import create_manager
-create_manager()
+
 
 handler404 = 'online_shop.views.page_not_found'
 handler500 = 'online_shop.views.server_error'
