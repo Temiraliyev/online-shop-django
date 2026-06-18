@@ -3,14 +3,14 @@
 
 <style>
 .pay-wrap { max-width: 860px; margin: 0 auto; }
-.pay-card { background:#fff; border-radius:20px; border:1px solid #e2e8f0; overflow:hidden; box-shadow:0 4px 24px rgba(99,102,241,.08); }
+.pay-card { background:#fff; border-radius:20px; border:1px solid #e2e8f0; overflow:hidden; box-shadow:0 4px 24px rgba(5,150,105,.08); }
 .form-label { font-size:.85rem; font-weight:600; color:#475569; margin-bottom:5px; }
 .form-control { border-radius:10px; border:1.5px solid #e2e8f0; padding:11px 14px; font-size:.9rem; transition:border-color .2s, box-shadow .2s; }
-.form-control:focus { border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,.12); outline:none; }
+.form-control:focus { border-color:#059669; box-shadow:0 0 0 3px rgba(5,150,105,.12); outline:none; }
 .errorlist { color:#ef4444; font-size:.8rem; list-style:none; padding:0; margin:4px 0 0; }
 
 .card-preview {
-  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 50%, #7c3aed 100%);
+  background: linear-gradient(135deg, #059669 0%, #047857 50%, #10b981 100%);
   border-radius: 18px;
   padding: 28px 28px 24px;
   color: #fff;
@@ -19,7 +19,7 @@
   aspect-ratio: 1.586;
   max-width: 360px;
   margin: 0 auto 28px;
-  box-shadow: 0 20px 60px rgba(99,102,241,.4);
+  box-shadow: 0 20px 60px rgba(5,150,105,.4);
   transition: background .4s;
 }
 .card-preview::before {
@@ -54,8 +54,8 @@
 .step-line { flex:1; height:2px; background:#e2e8f0; margin:0 8px; }
 .step.done .step-num { background:#10b981; color:#fff; }
 .step.done .step-label { color:#10b981; }
-.step.active .step-num { background:#6366f1; color:#fff; }
-.step.active .step-label { color:#6366f1; }
+.step.active .step-num { background:#059669; color:#fff; }
+.step.active .step-label { color:#059669; }
 .step .step-num { background:#e2e8f0; color:#94a3b8; }
 .step .step-label { color:#94a3b8; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -85,7 +85,7 @@
     <!-- Card form -->
     <div class="col-lg-7">
       <div class="pay-card">
-        <div style="padding:24px 28px;border-bottom:1px solid #e2e8f0;background:linear-gradient(135deg,#6366f1,#4f46e5);">
+        <div style="padding:24px 28px;border-bottom:1px solid #e2e8f0;background:linear-gradient(135deg,#059669,#047857);">
           <h2 style="color:#fff;font-size:1.2rem;font-weight:800;margin:0 0 4px;display:flex;align-items:center;gap:8px;">
             <span class="material-icons-round">credit_card</span>
             Karta orqali to'lov
@@ -168,7 +168,7 @@
             <div style="background:#f8fafc;border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;">
               <div>
                 <div style="font-size:.8rem;color:#64748b;margin-bottom:2px;">Jami to'lov miqdori</div>
-                <div style="font-size:1.4rem;font-weight:800;color:#6366f1;">{{ order.get_grand_total|floatformat:0 }} so'm</div>
+                <div style="font-size:1.4rem;font-weight:800;color:#059669;">{{ order.get_grand_total|floatformat:0 }} so'm</div>
               </div>
               <div style="text-align:right;font-size:.8rem;color:#94a3b8;">
                 Mahsulotlar: {{ order.get_total_price|floatformat:0 }} so'm<br>
@@ -177,7 +177,7 @@
             </div>
 
             <div id="processingOverlay" style="display:none;text-align:center;padding:20px 0;">
-              <div style="width:48px;height:48px;border:4px solid #e2e8f0;border-top-color:#6366f1;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px;"></div>
+              <div style="width:48px;height:48px;border:4px solid #e2e8f0;border-top-color:#059669;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px;"></div>
               <div style="font-weight:700;color:#0f172a;margin-bottom:4px;">To'lov amalga oshirilmoqda...</div>
               <div style="font-size:.85rem;color:#64748b;">Iltimos, sahifani yopmang</div>
             </div>
@@ -202,7 +202,7 @@
       <div class="pay-card">
         <div style="padding:20px 24px;border-bottom:1px solid #e2e8f0;background:#f8fafc;">
           <div style="font-weight:700;font-size:.95rem;color:#0f172a;display:flex;align-items:center;gap:8px;">
-            <span class="material-icons-round" style="color:#6366f1;font-size:20px;">receipt</span>
+            <span class="material-icons-round" style="color:#059669;font-size:20px;">receipt</span>
             Buyurtma #{{ order.id }}
           </div>
         </div>
@@ -213,7 +213,7 @@
               <div style="font-weight:600;font-size:.875rem;">{{ item.product.title }}</div>
               <div style="font-size:.8rem;color:#94a3b8;">{{ item.quantity }} dona</div>
             </div>
-            <div style="font-weight:700;font-size:.875rem;color:#6366f1;">{{ item.get_cost|floatformat:0 }} so'm</div>
+            <div style="font-weight:700;font-size:.875rem;color:#059669;">{{ item.get_cost|floatformat:0 }} so'm</div>
           </div>
           {% endfor %}
 
@@ -225,7 +225,7 @@
               <span>Yetkazib berish</span><span>{{ order.delivery_cost|floatformat:0 }} so'm</span>
             </div>
             <div style="display:flex;justify-content:space-between;font-weight:800;font-size:1rem;">
-              <span>Jami</span><span style="color:#6366f1;">{{ order.get_grand_total|floatformat:0 }} so'm</span>
+              <span>Jami</span><span style="color:#059669;">{{ order.get_grand_total|floatformat:0 }} so'm</span>
             </div>
           </div>
 
@@ -247,7 +247,7 @@ const CARD_CONFIGS = {
   visa:    { label: 'VISA',   bg: 'linear-gradient(135deg,#1a1f71,#0057a8)', logo: '<span style="font-weight:900;font-size:1.2rem;font-style:italic;letter-spacing:.05em;">VISA</span>', badge: '#1a1f71', cvv: true },
   humo:    { label: 'HUMO',   bg: 'linear-gradient(135deg,#1e7e34,#28a745)', logo: '<span style="font-weight:900;font-size:1rem;">HUMO</span>',   badge: '#1e7e34', cvv: false },
   uzcard:  { label: 'UzCard', bg: 'linear-gradient(135deg,#b91c1c,#ef4444)', logo: '<span style="font-weight:900;font-size:.9rem;">UzCard</span>', badge: '#b91c1c', cvv: false },
-  unknown: { label: '',       bg: 'linear-gradient(135deg,#6366f1,#4f46e5,#7c3aed)', logo: '<span class="material-icons-round" style="font-size:28px;opacity:.6;">credit_card</span>', badge: '', cvv: false },
+  unknown: { label: '',       bg: 'linear-gradient(135deg,#059669,#047857,#10b981)', logo: '<span class="material-icons-round" style="font-size:28px;opacity:.6;">credit_card</span>', badge: '', cvv: false },
 };
 
 function detectType(val) {

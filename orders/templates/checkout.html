@@ -6,15 +6,15 @@
 
 <style>
 .checkout-wrap { max-width: 1100px; margin: 0 auto; }
-.checkout-card { background:#fff; border-radius:20px; border:1px solid #e2e8f0; overflow:hidden; box-shadow:0 2px 16px rgba(99,102,241,.07); }
+.checkout-card { background:#fff; border-radius:20px; border:1px solid #e2e8f0; overflow:hidden; box-shadow:0 2px 16px rgba(5,150,105,.07); }
 .checkout-section-title { font-weight:700; font-size:.95rem; color:#0f172a; margin-bottom:16px; display:flex; align-items:center; gap:8px; }
-.checkout-section-title .material-icons-round { color:#6366f1; font-size:20px; }
+.checkout-section-title .material-icons-round { color:#059669; font-size:20px; }
 .form-label { font-size:.85rem; font-weight:600; color:#475569; margin-bottom:4px; }
 .form-control, .form-select { border-radius:10px; border:1.5px solid #e2e8f0; padding:10px 14px; font-size:.9rem; transition:border-color .2s, box-shadow .2s; width:100%; box-sizing:border-box; }
-.form-control:focus, .form-select:focus { border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,.12); outline:none; }
+.form-control:focus, .form-select:focus { border-color:#059669; box-shadow:0 0 0 3px rgba(5,150,105,.12); outline:none; }
 .form-control.is-invalid { border-color:#ef4444; }
 .payment-method-card { border:2px solid #e2e8f0; border-radius:14px; padding:16px 20px; cursor:pointer; transition:border-color .2s, background .2s; display:flex; align-items:center; gap:14px; }
-.payment-method-card.active, .payment-method-card:hover { border-color:#6366f1; background:#f5f3ff; }
+.payment-method-card.active, .payment-method-card:hover { border-color:#059669; background:#ecfdf5; }
 .payment-method-card input[type=radio] { display:none; }
 .payment-icon { width:44px; height:44px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .order-summary-row { display:flex; justify-content:space-between; font-size:.875rem; color:#64748b; margin-bottom:10px; }
@@ -23,7 +23,7 @@
 .map-wrap { border-radius:12px; overflow:hidden; border:1.5px solid #e2e8f0; position:relative; }
 #deliveryMap { height:280px; width:100%; }
 .map-hint { background:#f8fafc; padding:10px 14px; font-size:.8rem; color:#475569; display:flex; align-items:center; gap:6px; border-top:1px solid #f1f5f9; }
-.map-hint .material-icons-round { font-size:16px; color:#6366f1; }
+.map-hint .material-icons-round { font-size:16px; color:#059669; }
 .delivery-info-row { display:flex; align-items:center; gap:8px; padding:10px 14px; font-size:.85rem; font-weight:600; border-top:1px solid #f1f5f9; }
 @keyframes spin { to { transform:rotate(360deg); } }
 </style>
@@ -80,7 +80,7 @@
                        onclick="selectSavedAddress(this)"
                        style="flex:1;min-width:140px;max-width:220px;border:2px solid #e2e8f0;border-radius:12px;padding:12px 14px;cursor:pointer;transition:border-color .2s,background .2s;">
                     <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-                      <span class="material-icons-round" style="font-size:18px;color:#6366f1;">location_on</span>
+                      <span class="material-icons-round" style="font-size:18px;color:#059669;">location_on</span>
                       <span style="font-weight:700;font-size:.875rem;color:#0f172a;">{{ addr.label }}</span>
                       <span onclick="deleteSavedAddress(event, {{ addr.id }}, this)" style="margin-left:auto;cursor:pointer;color:#94a3b8;" title="O'chirish">
                         <span class="material-icons-round" style="font-size:16px;">close</span>
@@ -101,7 +101,7 @@
 
                 <!-- GPS detect button -->
                 <button type="button" id="gpsBtn" onclick="detectMyLocation()"
-                  style="width:100%;margin-bottom:10px;padding:12px 16px;border-radius:12px;border:2px dashed #6366f1;background:#f5f3ff;color:#6366f1;font-weight:700;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;">
+                  style="width:100%;margin-bottom:10px;padding:12px 16px;border-radius:12px;border:2px dashed #059669;background:#ecfdf5;color:#059669;font-weight:700;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;">
                   <span class="material-icons-round" style="font-size:20px;">my_location</span>
                   Joylashuvimni avtomatik aniqlash
                 </button>
@@ -111,10 +111,10 @@
                   <div id="mapStatus" class="delivery-info-row" style="display:none;">
                     <span class="material-icons-round" style="color:#10b981;font-size:18px;">location_on</span>
                     <span id="mapStatusText" style="flex:1;color:#0f172a;font-size:.82rem;"></span>
-                    <span id="deliveryCostBadge" style="background:#ede9fe;color:#6366f1;padding:3px 10px;border-radius:50px;font-size:.8rem;white-space:nowrap;"></span>
+                    <span id="deliveryCostBadge" style="background:#ecfdf5;color:#059669;padding:3px 10px;border-radius:50px;font-size:.8rem;white-space:nowrap;"></span>
                   </div>
                   <div id="mapLoading" class="delivery-info-row" style="display:none;">
-                    <span class="material-icons-round" style="font-size:16px;color:#6366f1;animation:spin 1s linear infinite;">refresh</span>
+                    <span class="material-icons-round" style="font-size:16px;color:#059669;animation:spin 1s linear infinite;">refresh</span>
                     <span style="color:#64748b;font-size:.85rem;">Manzil aniqlanmoqda...</span>
                   </div>
                   <div id="gpsLoading" class="delivery-info-row" style="display:none;">
@@ -141,14 +141,14 @@
 
               <!-- Save address panel (shown after map selection) -->
               <div class="col-12" id="saveAddrPanel" style="display:none;">
-                <div style="background:#f5f3ff;border:1.5px solid #ddd6fe;border-radius:12px;padding:14px 16px;">
+                <div style="background:#ecfdf5;border:1.5px solid #ddd6fe;border-radius:12px;padding:14px 16px;">
                   <div style="font-size:.82rem;font-weight:700;color:#4c1d95;margin-bottom:10px;display:flex;align-items:center;gap:6px;">
                     <span class="material-icons-round" style="font-size:16px;">bookmark_add</span>
                     Bu manzilni saqlash (ixtiyoriy)
                   </div>
                   <div style="display:flex;gap:8px;align-items:center;">
                     <input id="saveAddrLabel" type="text" placeholder='Masalan: "Uy", "Ish"...' class="form-control" style="flex:1;">
-                    <button type="button" onclick="saveCurrentAddress()" style="white-space:nowrap;padding:10px 16px;border-radius:10px;border:none;background:#6366f1;color:#fff;font-weight:700;font-size:.85rem;cursor:pointer;">
+                    <button type="button" onclick="saveCurrentAddress()" style="white-space:nowrap;padding:10px 16px;border-radius:10px;border:none;background:#059669;color:#fff;font-weight:700;font-size:.85rem;cursor:pointer;">
                       Saqlash
                     </button>
                   </div>
@@ -190,8 +190,8 @@
               </div>
               <div class="col-sm-6">
                 <label class="payment-method-card" id="label_card" for="id_payment_method_1" onclick="selectPayment('card')">
-                  <div class="payment-icon" style="background:#ede9fe;">
-                    <span class="material-icons-round" style="color:#7c3aed;font-size:22px;">credit_card</span>
+                  <div class="payment-icon" style="background:#ecfdf5;">
+                    <span class="material-icons-round" style="color:#10b981;font-size:22px;">credit_card</span>
                   </div>
                   <div>
                     <div style="font-weight:700;font-size:.95rem;color:#0f172a;">Karta orqali</div>
@@ -209,8 +209,8 @@
               </div>
             </div>
 
-            <div id="cardInfo" style="display:none;margin-top:16px;padding:14px 16px;background:#f5f3ff;border-radius:12px;border:1px solid #ddd6fe;display:none;align-items:flex-start;gap:10px;">
-              <span class="material-icons-round" style="color:#7c3aed;font-size:20px;flex-shrink:0;margin-top:1px;">security</span>
+            <div id="cardInfo" style="display:none;margin-top:16px;padding:14px 16px;background:#ecfdf5;border-radius:12px;border:1px solid #ddd6fe;display:none;align-items:flex-start;gap:10px;">
+              <span class="material-icons-round" style="color:#10b981;font-size:20px;flex-shrink:0;margin-top:1px;">security</span>
               <div style="font-size:.875rem;color:#4c1d95;line-height:1.5;">
                 <strong>Karta orqali xavfsiz to'lov:</strong> Keyingi sahifada karta ma'lumotlarini kiriting.
               </div>
@@ -237,7 +237,7 @@
                 <div style="font-weight:600;font-size:.85rem;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.product.title }}</div>
                 <div style="font-size:.8rem;color:#94a3b8;">{{ item.quantity }} dona × {{ item.price|floatformat:0 }} so'm</div>
               </div>
-              <div style="font-weight:700;font-size:.875rem;color:#6366f1;white-space:nowrap;">{{ item.total_price|floatformat:0 }} so'm</div>
+              <div style="font-weight:700;font-size:.875rem;color:#059669;white-space:nowrap;">{{ item.total_price|floatformat:0 }} so'm</div>
             </div>
             {% endfor %}
 
@@ -252,7 +252,7 @@
               </div>
               <div class="order-summary-row total">
                 <span>Jami to'lov</span>
-                <span id="summaryTotal" style="color:#6366f1;">{{ cart.get_total_price|floatformat:0 }} so'm</span>
+                <span id="summaryTotal" style="color:#059669;">{{ cart.get_total_price|floatformat:0 }} so'm</span>
               </div>
             </div>
 
@@ -304,7 +304,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // Shop marker (grey, fixed)
 const shopIcon = L.divIcon({
-  html: '<div style="background:#6366f1;width:14px;height:14px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(99,102,241,.5);"></div>',
+  html: '<div style="background:#059669;width:14px;height:14px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 8px rgba(5,150,105,.5);"></div>',
   iconSize: [14, 14], iconAnchor: [7, 7], className: '',
 });
 L.marker([SHOP_LAT, SHOP_LON], {icon: shopIcon})
@@ -328,7 +328,7 @@ let deliveryLine = null;
 function drawLine(lat, lon) {
   if (deliveryLine) map.removeLayer(deliveryLine);
   deliveryLine = L.polyline([[SHOP_LAT, SHOP_LON], [lat, lon]], {
-    color: '#6366f1', weight: 2, dashArray: '6,6', opacity: .6,
+    color: '#059669', weight: 2, dashArray: '6,6', opacity: .6,
   }).addTo(map);
 }
 
@@ -538,8 +538,8 @@ function selectSavedAddress(card) {
     c.style.borderColor = '#e2e8f0';
     c.style.background = '';
   });
-  card.style.borderColor = '#6366f1';
-  card.style.background = '#f5f3ff';
+  card.style.borderColor = '#059669';
+  card.style.background = '#ecfdf5';
 
   const lat = parseFloat(card.dataset.lat);
   const lon = parseFloat(card.dataset.lon);
@@ -627,11 +627,11 @@ function addSavedAddressCard(id, label, addr, lat, lon) {
   card.dataset.address = addr;
   card.dataset.lat = lat;
   card.dataset.lon = lon;
-  card.style.cssText = 'flex:1;min-width:140px;max-width:220px;border:2px solid #6366f1;border-radius:12px;padding:12px 14px;cursor:pointer;transition:border-color .2s,background .2s;background:#f5f3ff;';
+  card.style.cssText = 'flex:1;min-width:140px;max-width:220px;border:2px solid #059669;border-radius:12px;padding:12px 14px;cursor:pointer;transition:border-color .2s,background .2s;background:#ecfdf5;';
   card.onclick = function() { selectSavedAddress(this); };
   card.innerHTML = `
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-      <span class="material-icons-round" style="font-size:18px;color:#6366f1;">location_on</span>
+      <span class="material-icons-round" style="font-size:18px;color:#059669;">location_on</span>
       <span style="font-weight:700;font-size:.875rem;color:#0f172a;">${label}</span>
       <span onclick="deleteSavedAddress(event, ${id}, this)" style="margin-left:auto;cursor:pointer;color:#94a3b8;">
         <span class="material-icons-round" style="font-size:16px;">close</span>

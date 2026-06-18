@@ -5,8 +5,8 @@
 <div class="row g-4 mb-4">
   <div class="col-sm-6 col-xl-3">
     <a href="{% url 'dashboard:products' %}" style="text-decoration:none;">
-      <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;padding:24px;display:flex;align-items:center;gap:16px;transition:box-shadow .2s;" onmouseover="this.style.boxShadow='0 8px 24px rgba(99,102,241,.14)'" onmouseout="this.style.boxShadow='none'">
-        <div style="width:52px;height:52px;background:linear-gradient(135deg,#6366f1,#4f46e5);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+      <div style="background:#fff;border-radius:18px;border:1px solid #e2e8f0;padding:24px;display:flex;align-items:center;gap:16px;transition:box-shadow .2s;" onmouseover="this.style.boxShadow='0 8px 24px rgba(5,150,105,.14)'" onmouseout="this.style.boxShadow='none'">
+        <div style="width:52px;height:52px;background:linear-gradient(135deg,#059669,#047857);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
           <span class="material-icons-round" style="font-size:26px;color:#fff;">inventory_2</span>
         </div>
         <div>
@@ -58,7 +58,7 @@
 <!-- Revenue summary -->
 <div class="row g-4 mb-4">
   <div class="col-sm-4">
-    <div style="background:linear-gradient(135deg,#6366f1,#4f46e5);border-radius:18px;padding:20px 24px;color:#fff;">
+    <div style="background:linear-gradient(135deg,#059669,#047857);border-radius:18px;padding:20px 24px;color:#fff;">
       <div style="font-size:.8rem;font-weight:600;opacity:.8;margin-bottom:6px;">Bugungi daromad</div>
       <div style="font-size:1.6rem;font-weight:800;">{{ today_revenue|floatformat:0 }} so'm</div>
     </div>
@@ -82,7 +82,7 @@
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
     <h2 style="font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin:0;">Oxirgi 30 kun statistikasi</h2>
     <div style="display:flex;gap:16px;">
-      <span style="font-size:.75rem;color:#6366f1;font-weight:600;display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;background:#6366f1;border-radius:2px;display:inline-block;"></span>Buyurtmalar</span>
+      <span style="font-size:.75rem;color:#059669;font-weight:600;display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;background:#059669;border-radius:2px;display:inline-block;"></span>Buyurtmalar</span>
       <span style="font-size:.75rem;color:#10b981;font-weight:600;display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;background:#10b981;border-radius:2px;display:inline-block;"></span>Daromad (so'm)</span>
     </div>
   </div>
@@ -136,7 +136,7 @@
 <div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
     <h2 style="font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#94a3b8;margin:0;">So'nggi buyurtmalar</h2>
-    <a href="{% url 'dashboard:orders' %}" style="font-size:.8rem;color:#6366f1;font-weight:600;text-decoration:none;">Barchasini ko'rish →</a>
+    <a href="{% url 'dashboard:orders' %}" style="font-size:.8rem;color:#059669;font-weight:600;text-decoration:none;">Barchasini ko'rish →</a>
   </div>
 
   {% if recent_orders %}
@@ -156,7 +156,7 @@
         <tr>
           <td style="color:#94a3b8;font-weight:500;">{{ order.id }}</td>
           <td style="font-weight:600;">{{ order.user.full_name }}</td>
-          <td style="color:#6366f1;font-weight:700;">{{ order.get_total_price|floatformat:0 }} so'm</td>
+          <td style="color:#059669;font-weight:700;">{{ order.get_total_price|floatformat:0 }} so'm</td>
           <td>
             {% if order.delivery_status == 'delivered' %}
               <span style="background:#d1fae5;color:#065f46;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:50px;">Yetkazildi</span>
@@ -199,7 +199,7 @@ new Chart(ctx, {
       {
         label: 'Buyurtmalar',
         data: orders,
-        backgroundColor: 'rgba(99,102,241,.7)',
+        backgroundColor: 'rgba(5,150,105,.7)',
         borderRadius: 6,
         yAxisID: 'y',
       },

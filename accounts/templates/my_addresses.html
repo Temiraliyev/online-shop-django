@@ -6,30 +6,30 @@
 
 <style>
 .addr-page { max-width: 900px; margin: 0 auto; }
-.addr-card { background:#fff; border-radius:20px; border:1px solid #e2e8f0; box-shadow:0 2px 16px rgba(99,102,241,.07); overflow:hidden; }
+.addr-card { background:#fff; border-radius:20px; border:1px solid #e2e8f0; box-shadow:0 2px 16px rgba(5,150,105,.07); overflow:hidden; }
 .addr-card-header { padding:20px 24px; border-bottom:1px solid #e2e8f0; background:#f8fafc; display:flex; align-items:center; gap:10px; }
-.addr-card-header .material-icons-round { color:#6366f1; font-size:22px; }
+.addr-card-header .material-icons-round { color:#059669; font-size:22px; }
 .addr-card-title { font-weight:700; font-size:1rem; color:#0f172a; margin:0; }
 .saved-list { display:flex; flex-direction:column; gap:0; }
 .saved-item { display:flex; align-items:center; gap:16px; padding:16px 24px; border-bottom:1px solid #f1f5f9; transition:background .15s; }
 .saved-item:last-child { border-bottom:none; }
 .saved-item:hover { background:#f8fafc; }
-.saved-item-icon { width:44px; height:44px; background:#ede9fe; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-.saved-item-icon .material-icons-round { color:#6366f1; font-size:22px; }
+.saved-item-icon { width:44px; height:44px; background:#ecfdf5; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.saved-item-icon .material-icons-round { color:#059669; font-size:22px; }
 .saved-item-body { flex:1; min-width:0; }
 .saved-item-label { font-weight:700; font-size:.9rem; color:#0f172a; margin-bottom:2px; }
 .saved-item-addr { font-size:.8rem; color:#64748b; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .saved-item-coords { font-size:.72rem; color:#94a3b8; margin-top:2px; }
 .btn-del { background:none; border:none; cursor:pointer; color:#94a3b8; border-radius:8px; padding:6px; transition:background .15s, color .15s; }
 .btn-del:hover { background:#fee2e2; color:#ef4444; }
-.btn-checkout { background:linear-gradient(135deg,#6366f1,#4f46e5); color:#fff; border:none; border-radius:10px; padding:7px 14px; font-size:.8rem; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:5px; transition:opacity .15s; }
+.btn-checkout { background:linear-gradient(135deg,#059669,#047857); color:#fff; border:none; border-radius:10px; padding:7px 14px; font-size:.8rem; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:5px; transition:opacity .15s; }
 .btn-checkout:hover { opacity:.88; color:#fff; }
 #addMap { height:300px; width:100%; }
 .form-label { font-size:.83rem; font-weight:600; color:#475569; margin-bottom:4px; display:block; }
 .form-control { border-radius:10px; border:1.5px solid #e2e8f0; padding:10px 14px; font-size:.9rem; width:100%; transition:border-color .2s, box-shadow .2s; }
-.form-control:focus { border-color:#6366f1; box-shadow:0 0 0 3px rgba(99,102,241,.12); outline:none; }
+.form-control:focus { border-color:#059669; box-shadow:0 0 0 3px rgba(5,150,105,.12); outline:none; }
 .map-hint { background:#f8fafc; border-top:1px solid #f1f5f9; padding:10px 14px; font-size:.8rem; color:#475569; display:flex; align-items:center; gap:6px; }
-.map-hint .material-icons-round { font-size:16px; color:#6366f1; }
+.map-hint .material-icons-round { font-size:16px; color:#059669; }
 .info-row { padding:10px 14px; border-top:1px solid #f1f5f9; display:flex; align-items:center; gap:8px; font-size:.83rem; }
 @keyframes spin { to { transform:rotate(360deg); } }
 </style>
@@ -84,7 +84,7 @@
         {% else %}
         <div id="savedList">
           <div class="empty-state" style="padding:48px 20px;">
-            <div class="empty-state-icon"><span class="material-icons-round" style="font-size:56px;color:#c7d2fe;">location_off</span></div>
+            <div class="empty-state-icon"><span class="material-icons-round" style="font-size:56px;color:#6ee7b7;">location_off</span></div>
             <h4>Hali manzil yo'q</h4>
             <p>Xaritadan joy belgilab yangi manzil qo'shing</p>
           </div>
@@ -104,7 +104,7 @@
         <div style="padding:20px 24px 16px;">
           <!-- GPS button -->
           <button type="button" id="gpsBtn" onclick="detectGPS()"
-            style="width:100%;margin-bottom:12px;padding:11px 16px;border-radius:12px;border:2px dashed #6366f1;background:#f5f3ff;color:#6366f1;font-weight:700;font-size:.875rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;">
+            style="width:100%;margin-bottom:12px;padding:11px 16px;border-radius:12px;border:2px dashed #059669;background:#ecfdf5;color:#059669;font-weight:700;font-size:.875rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;">
             <span class="material-icons-round" style="font-size:20px;">my_location</span>
             GPS bilan joylashuvimni aniqlash
           </button>
@@ -146,7 +146,7 @@
             <div id="labelError" style="color:#ef4444;font-size:.8rem;margin-top:4px;display:none;">Manzil nomini kiriting</div>
           </div>
           <button type="button" id="saveBtn" onclick="saveAddress()" disabled
-            style="width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;font-weight:700;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;opacity:.5;transition:opacity .2s;">
+            style="width:100%;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#059669,#047857);color:#fff;font-weight:700;font-size:.9rem;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;opacity:.5;transition:opacity .2s;">
             <span class="material-icons-round" style="font-size:20px;">bookmark_add</span>
             Manzilni saqlash
           </button>
@@ -174,7 +174,7 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 const pinIcon = L.divIcon({
   html: `<div style="width:34px;height:34px;position:relative;">
-    <div style="background:#6366f1;width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #fff;box-shadow:0 2px 10px rgba(99,102,241,.5);"></div>
+    <div style="background:#059669;width:34px;height:34px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);border:3px solid #fff;box-shadow:0 2px 10px rgba(5,150,105,.5);"></div>
     <span class="material-icons-round" style="position:absolute;top:5px;left:5px;font-size:16px;color:#fff;transform:rotate(45deg);">location_on</span>
   </div>`,
   iconSize: [34, 34], iconAnchor: [17, 34], className: '',
@@ -351,7 +351,7 @@ function deleteAddress(pk, btn) {
     const list = document.getElementById('savedList');
     if (list && list.querySelectorAll('.saved-item').length === 0) {
       list.innerHTML = `<div class="empty-state" style="padding:48px 20px;">
-        <div class="empty-state-icon"><span class="material-icons-round" style="font-size:56px;color:#c7d2fe;">location_off</span></div>
+        <div class="empty-state-icon"><span class="material-icons-round" style="font-size:56px;color:#6ee7b7;">location_off</span></div>
         <h4>Hali manzil yo'q</h4>
         <p>Xaritadan joy belgilab yangi manzil qo'shing</p>
       </div>`;

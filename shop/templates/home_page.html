@@ -4,7 +4,7 @@
 <!-- Hero Banner (only on main page without search/filter) -->
 {% if not query and not request.GET.q %}
 <div
-  style="background:linear-gradient(135deg,#6366f1 0%,#4f46e5 60%,#7c3aed 100%);border-radius:24px;padding:56px 48px;margin-bottom:40px;position:relative;overflow:hidden;">
+  style="background:linear-gradient(135deg,#059669 0%,#047857 60%,#10b981 100%);border-radius:24px;padding:56px 48px;margin-bottom:40px;position:relative;overflow:hidden;">
   <div
     style="position:absolute;top:-40px;right:-40px;width:260px;height:260px;background:rgba(255,255,255,.07);border-radius:50%;">
   </div>
@@ -20,7 +20,7 @@
     <p style="color:rgba(255,255,255,.8);font-size:1rem;margin:0 0 28px;line-height:1.6;">Minglab mahsulotlar orasidan
       o'zingizga mosini toping. Tez yetkazib berish kafolatlangan.</p>
     <a href="{% url 'shop:home_page' %}"
-      style="background:#fff;color:#4f46e5;font-weight:700;font-size:.95rem;padding:12px 28px;border-radius:50px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
+      style="background:#fff;color:#047857;font-weight:700;font-size:.95rem;padding:12px 28px;border-radius:50px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
       <span class="material-icons-round" style="font-size:18px;">explore</span>
       Mahsulotlarni ko'rish
     </a>
@@ -32,12 +32,12 @@
 {% if query %}
 <div style="margin-bottom:28px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
   <h2 style="font-size:1.2rem;font-weight:800;color:#0f172a;margin:0;">
-    <span class="material-icons-round" style="vertical-align:middle;color:#6366f1;margin-right:4px;">search</span>
+    <span class="material-icons-round" style="vertical-align:middle;color:#059669;margin-right:4px;">search</span>
     "{{ query }}" bo'yicha natijalar
   </h2>
   {% if products %}
   <span
-    style="background:#e0e7ff;color:#4f46e5;font-size:.78rem;font-weight:700;padding:3px 12px;border-radius:50px;">{{
+    style="background:#d1fae5;color:#047857;font-size:.78rem;font-weight:700;padding:3px 12px;border-radius:50px;">{{
     products.paginator.count }} ta topildi</span>
   {% endif %}
   <a href="{% url 'shop:home_page' %}"
@@ -95,7 +95,7 @@
     {% if products.has_previous %}
     <li class="page-item">
       <a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}page={{ products.previous_page_number }}"
-        style="border-radius:10px;border-color:#e2e8f0;color:#6366f1;">
+        style="border-radius:10px;border-color:#e2e8f0;color:#059669;">
         <span class="material-icons-round" style="font-size:18px;vertical-align:middle;">chevron_left</span>
       </a>
     </li>
@@ -104,18 +104,18 @@
     {% if products.number == num %}
     <li class="page-item active">
       <a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}page={{ num }}"
-        style="border-radius:10px;background:#6366f1;border-color:#6366f1;">{{ num }}</a>
+        style="border-radius:10px;background:#059669;border-color:#059669;">{{ num }}</a>
     </li>
     {% elif num > products.number|add:'-3' and num < products.number|add:'3' %} <li class="page-item">
       <a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}page={{ num }}"
-        style="border-radius:10px;border-color:#e2e8f0;color:#6366f1;">{{ num }}</a>
+        style="border-radius:10px;border-color:#e2e8f0;color:#059669;">{{ num }}</a>
       </li>
       {% endif %}
       {% endfor %}
       {% if products.has_next %}
       <li class="page-item">
         <a class="page-link" href="?{% if query %}q={{ query }}&{% endif %}page={{ products.next_page_number }}"
-          style="border-radius:10px;border-color:#e2e8f0;color:#6366f1;">
+          style="border-radius:10px;border-color:#e2e8f0;color:#059669;">
           <span class="material-icons-round" style="font-size:18px;vertical-align:middle;">chevron_right</span>
         </a>
       </li>

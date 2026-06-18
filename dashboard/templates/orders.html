@@ -35,13 +35,13 @@
         <td style="color:#64748b;font-size:.82rem;">{{ order.phone|default:"—" }}</td>
         <td style="font-size:.8rem;color:#64748b;max-width:180px;">
           {% if order.address_label %}
-          <span style="display:inline-flex;align-items:center;gap:3px;background:#ede9fe;color:#6366f1;padding:1px 7px;border-radius:50px;font-size:.72rem;font-weight:700;margin-bottom:2px;">
+          <span style="display:inline-flex;align-items:center;gap:3px;background:#ecfdf5;color:#059669;padding:1px 7px;border-radius:50px;font-size:.72rem;font-weight:700;margin-bottom:2px;">
             <span class="material-icons-round" style="font-size:11px;">location_on</span>{{ order.address_label }}
           </span><br>
           {% endif %}
           {% if order.address %}{{ order.address|truncatechars:50 }}{% else %}—{% endif %}
         </td>
-        <td style="color:#6366f1;font-weight:700;white-space:nowrap;">{{ order.get_grand_total|floatformat:0 }} so'm</td>
+        <td style="color:#059669;font-weight:700;white-space:nowrap;">{{ order.get_grand_total|floatformat:0 }} so'm</td>
         <td>
           {% if order.payment_status == 'paid' %}
           <span class="status-chip chip-paid"><span class="material-icons-round" style="font-size:11px;">check</span> To'landi</span>
